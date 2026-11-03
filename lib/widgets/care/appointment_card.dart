@@ -8,6 +8,7 @@ import '../../utilities/time/dates.dart';
 import '../common/buttons/app_button.dart';
 import '../common/progress/countdown_meter.dart';
 import '../common/status/status_chip.dart';
+import '../../constants/brand_colors.dart';
 
 /// One appointment. While scheduled, a draining meter shows how long free cancellation stays open
 /// (the server's stored deadline); the cancel action disappears once the window has closed.
@@ -59,7 +60,7 @@ class AppointmentCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: highlight ? Colors.white.withValues(alpha: 0.2) : scheme.primaryContainer,
+                  color: highlight ? BrandColors.onGradientPanel : scheme.primaryContainer,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(Icons.medical_services_rounded, color: onCard ?? scheme.onPrimaryContainer),

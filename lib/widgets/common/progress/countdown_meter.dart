@@ -5,6 +5,7 @@ import '../../../constants/motion.dart';
 import '../../../constants/scheduling.dart';
 import '../../../controllers/ui/clock_controller.dart';
 import '../../../utilities/time/countdown.dart';
+import '../../../constants/brand_colors.dart';
 
 /// A draining bar for a time window (for example free cancellation): full when it opens, empty when it closes,
 /// amber in its last quarter. The remaining time is written out too, so colour is never the only cue.
@@ -34,7 +35,7 @@ class CountdownMeter extends ConsumerWidget {
     final left = remainingLabel(closesAt, now);
     final urgent = fraction > 0 && fraction < Scheduling.urgentFraction;
     final text = onColor ?? scheme.onSurfaceVariant;
-    final fill = urgent ? Colors.amber.shade600 : (onColor ?? scheme.primary);
+    final fill = urgent ? BrandColors.urgentFill : (onColor ?? scheme.primary);
     return Semantics(
       label: left == null ? closedLabel : '$label: $left',
       child: Column(
@@ -53,7 +54,7 @@ class CountdownMeter extends ConsumerWidget {
                   style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
-                    color: urgent ? Colors.amber.shade700 : text,
+                    color: urgent ? BrandColors.urgentText : text,
                     fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../models/ui/timeline_entry.dart';
 import '../../../utilities/ui/tone_palette.dart';
+import '../../../constants/brand_colors.dart';
 
 const _marker = 32.0;
 
@@ -23,7 +24,7 @@ class TimelineMarker extends StatelessWidget {
         color: entry.done ? colors.solid : null,
         border: entry.done ? null : Border.all(color: scheme.outline, width: 2),
       ),
-      child: Icon(entry.icon, size: 17, color: entry.done ? Colors.white : scheme.onSurfaceVariant),
+      child: Icon(entry.icon, size: 17, color: entry.done ? BrandColors.onSolid : scheme.onSurfaceVariant),
     );
   }
 }
