@@ -13,7 +13,7 @@ final careTeamProvider = FutureProvider<List<AssignedClinician>>((ref) async {
   if (hospital == null) return const [];
   final page = await ref
       .read(careTeamServiceProvider)
-      .myCareTeam(hospital.id, const PageRequest(page: 0, size: AppConstants.maxCareTeam));
+      .myCareTeam(hospital.id, const PageRequest(page: 0, pageSize: AppConstants.maxCareTeam));
   return page.items;
 });
 

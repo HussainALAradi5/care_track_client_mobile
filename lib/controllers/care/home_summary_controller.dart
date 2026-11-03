@@ -13,16 +13,16 @@ final homeSummaryProvider = FutureProvider<HomeSummary>((ref) async {
   if (hospital == null) return const HomeSummary(openRequests: 0, upcoming: 0, completed: 0, next: null);
   final bookings = ref.read(bookingServiceProvider);
   final appointments = ref.read(appointmentServiceProvider);
-  PageRequest countOnly(Map<String, Object?> filters) => PageRequest(page: 0, size: 1, filters: filters);
+  PageRequest countOnly(Map<String, Object?> filters) => PageRequest(page: 0, pageSize: 1, filters: filters);
   final (waiting, upcoming, completed) = await (
     bookings.mine(hospital.id, countOnly({'status': BookingStatus.requested.wire})),
     appointments.mine(hospital.id, countOnly({'upcoming': true})),
     appointments.mine(hospital.id, countOnly({'status': AppointmentStatus.completed.wire})),
   ).wait;
   return HomeSummary(
-    openRequests: waiting.page.totalItems,
-    upcoming: upcoming.page.totalItems,
-    completed: completed.page.totalItems,
+    openRequests: waiting.totalItems,
+    upcoming: upcoming.totalItems,
+    completed: completed.totalItems,
     next: upcoming.items.isEmpty ? null : upcoming.items.first,
   );
 });

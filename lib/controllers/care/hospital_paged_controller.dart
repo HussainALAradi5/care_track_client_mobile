@@ -15,7 +15,7 @@ abstract class HospitalPagedController<T> extends AsyncNotifier<PagedItems<T>> {
   Future<PagedItems<T>> build() async {
     final hospital = ref.watch(selectedHospitalProvider);
     if (hospital == null) return PagedItems<T>(items: const [], nextPage: 0, hasNext: false);
-    return _toItems(await fetch(hospital.id, const PageRequest(page: 0, size: AppConstants.pageSize)), const []);
+    return _toItems(await fetch(hospital.id, const PageRequest(page: 0, pageSize: AppConstants.pageSize)), const []);
   }
 
   Future<void> refresh() async {
@@ -29,7 +29,7 @@ abstract class HospitalPagedController<T> extends AsyncNotifier<PagedItems<T>> {
     if (current == null || hospital == null || !current.hasNext || current.loadingMore) return;
     state = AsyncData(current.copyWith(loadingMore: true));
     try {
-      final next = await fetch(hospital.id, PageRequest(page: current.nextPage, size: AppConstants.pageSize));
+      final next = await fetch(hospital.id, PageRequest(page: current.nextPage, pageSize: AppConstants.pageSize));
       state = AsyncData(_toItems(next, current.items));
     } catch (_) {
       state = AsyncData(current.copyWith(loadingMore: false));
@@ -38,5 +38,5 @@ abstract class HospitalPagedController<T> extends AsyncNotifier<PagedItems<T>> {
   }
 
   PagedItems<T> _toItems(PageResult<T> page, List<T> before) =>
-      PagedItems(items: [...before, ...page.items], nextPage: page.page.number + 1, hasNext: page.page.hasNext);
+      PagedItems(items: [...before, ...page.items], nextPage: page.page + 1, hasNext: page.hasNext);
 }

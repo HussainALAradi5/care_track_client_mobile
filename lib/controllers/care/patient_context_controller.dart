@@ -15,7 +15,7 @@ class PatientContextController extends AsyncNotifier<PatientContext> {
     if (user == null) return const PatientContext(hospitals: [], selectedId: null);
     final page = await ref
         .read(enrollmentServiceProvider)
-        .myHospitals(const PageRequest(page: 0, size: AppConstants.maxEnrollments));
+        .myHospitals(const PageRequest(page: 0, pageSize: AppConstants.maxEnrollments));
     final stored = ref.read(sharedPreferencesProvider).getString(AppConstants.hospitalKey);
     return PatientContext(hospitals: page.items, selectedId: stored);
   }
