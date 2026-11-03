@@ -1,4 +1,4 @@
-package com.example.care_track_client_mobile
+package com.caretrack.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 
