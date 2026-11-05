@@ -8,6 +8,10 @@ class PermissionCodes {
   static const appointmentCheckIn = 'APPOINTMENT:CHECK_IN';
   static const appointmentNoShow = 'APPOINTMENT:NO_SHOW';
   static const shiftWrite = 'SHIFT:WRITE';
+  static const clinicalHistoryWrite = 'CLINICAL_HISTORY:WRITE';
+  static const accountRead = 'ACCOUNT:READ';
+  static const journalRead = 'JOURNAL:READ';
+  static const financeReportRead = 'FINANCE_REPORT:READ';
 
   /// Header the server requires on retry-safe writes such as booking confirmation.
   static const idempotencyHeader = 'Idempotency-Key';

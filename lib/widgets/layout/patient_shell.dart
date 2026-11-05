@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../constants/texts/common_texts.dart';
+import '../../constants/texts/document_texts.dart';
 import 'account_menu.dart';
 import 'hospital_switcher.dart';
 
-/// Signed-in frame: hospital switcher and account menu on top, four tabs at the bottom.
+/// Signed-in frame: hospital switcher and account menu on top, five tabs at the bottom.
 class PatientShell extends StatelessWidget {
   const PatientShell({super.key, required this.shell});
 
@@ -39,6 +40,11 @@ class PatientShell extends StatelessWidget {
             icon: Icon(Icons.calendar_month_outlined),
             selectedIcon: Icon(Icons.calendar_month_rounded),
             label: CommonTexts.navVisits,
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.folder_open_outlined),
+            selectedIcon: Icon(Icons.folder_rounded),
+            label: DocumentTexts.navDocuments,
           ),
         ],
       ),

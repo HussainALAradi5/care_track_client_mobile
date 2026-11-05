@@ -17,5 +17,6 @@ class AppConstants {
   static const themeModeKey = 'caretrack.themeMode';
   static const hospitalKey = 'caretrack.hospital';
   static const staffHospitalKey = 'caretrack.staffHospital';
+  static const staffOrganizationKey = 'caretrack.staffOrganization';
   static const tokenKey = 'caretrack.tokens';
 }
