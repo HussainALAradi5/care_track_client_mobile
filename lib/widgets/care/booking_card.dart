@@ -6,6 +6,7 @@ import '../../enums/ui/button_variant.dart';
 import '../../models/care/booking.dart';
 import '../../utilities/time/dates.dart';
 import '../common/buttons/app_button.dart';
+import '../common/display/avatar.dart';
 import '../common/status/status_chip.dart';
 
 /// One booking request: when, with whom, its decision, the decline reason and a withdraw action while waiting.
@@ -28,11 +29,7 @@ class BookingCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(color: scheme.primaryContainer, borderRadius: BorderRadius.circular(12)),
-                  child: Icon(Icons.event_note_rounded, color: scheme.onPrimaryContainer),
-                ),
+                const Avatar(icon: Icons.event_note_rounded),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(

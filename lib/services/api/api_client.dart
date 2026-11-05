@@ -28,8 +28,22 @@ class ApiClient {
     return response.data!;
   }
 
-  Future<Map<String, dynamic>> post(String path, {Object? body, Map<String, dynamic>? query}) async {
-    final response = await _dio.post<Map<String, dynamic>>(path, data: body, queryParameters: query);
+  /// [headers] carries per-call headers such as the Idempotency-Key retry-safe writes need.
+  Future<Map<String, dynamic>> post(
+    String path, {
+    Object? body,
+    Map<String, dynamic>? query,
+    Map<String, String>? headers,
+  }) async {
+    final response = await _dio.post<Map<String, dynamic>>(
+      path,
+      data: body,
+      queryParameters: query,
+      options: headers == null ? null : Options(headers: headers),
+    );
     return response.data!;
   }
+
+  /// For routes that answer 204 No Content.
+  Future<void> delete(String path) => _dio.delete<void>(path);
 }

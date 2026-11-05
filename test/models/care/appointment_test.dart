@@ -28,6 +28,17 @@ void main() {
     expect(a.scheduled, isTrue);
     expect(a.version, 2);
     expect(a.startsAt.toUtc(), DateTime.utc(2026, 11, 4, 9));
+    expect(a.patientName, isEmpty);
+  });
+
+  test('staff lists carry the patient and clinician names', () {
+    final a = Appointment.fromJson({
+      ...appointmentJson('SCHEDULED'),
+      'patientName': 'Development Patient',
+      'clinicianName': 'Development Doctor',
+    });
+    expect(a.patientName, 'Development Patient');
+    expect(a.clinicianName, 'Development Doctor');
   });
 
   test('journey ends at cancellation or completion', () {
