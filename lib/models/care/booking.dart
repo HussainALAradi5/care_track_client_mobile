@@ -11,6 +11,8 @@ class Booking {
     required this.endsAt,
     required this.status,
     required this.version,
+    this.patientName = '',
+    this.clinicianName = '',
     this.rejectionReason,
   });
 
@@ -22,6 +24,8 @@ class Booking {
   final DateTime endsAt;
   final BookingStatus status;
   final int version;
+  final String patientName;
+  final String clinicianName;
   final String? rejectionReason;
 
   bool get waiting => status == BookingStatus.requested;
@@ -35,6 +39,8 @@ class Booking {
     endsAt: DateTime.parse(json['endsAt'] as String).toLocal(),
     status: BookingStatus.fromWire(json['status'] as String),
     version: (json['version'] as num).toInt(),
+    patientName: json['patientName'] as String? ?? '',
+    clinicianName: json['clinicianName'] as String? ?? '',
     rejectionReason: json['rejectionReason'] as String?,
   );
 }

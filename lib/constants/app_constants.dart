@@ -7,6 +7,7 @@ class AppConstants {
   static const pageSize = 20;
   static const maxEnrollments = 50;
   static const maxCareTeam = 50;
+  static const maxStaffHospitals = 50;
   static const clockTick = Duration(seconds: 30);
   static const connectTimeout = Duration(seconds: 15);
   static const receiveTimeout = Duration(seconds: 30);
@@ -15,5 +16,6 @@ class AppConstants {
 
   static const themeModeKey = 'caretrack.themeMode';
   static const hospitalKey = 'caretrack.hospital';
+  static const staffHospitalKey = 'caretrack.staffHospital';
   static const tokenKey = 'caretrack.tokens';
 }

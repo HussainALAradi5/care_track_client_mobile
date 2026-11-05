@@ -10,11 +10,8 @@ import '../../models/care/appointment.dart';
 import '../../models/ui/confirm_config.dart';
 import '../../widgets/care/appointment_card.dart';
 import '../../widgets/common/feedback/app_snack.dart';
-import '../../widgets/common/feedback/async_body.dart';
-import '../../widgets/common/feedback/empty_state.dart';
-import '../../widgets/common/feedback/load_more_footer.dart';
+import '../../widgets/common/feedback/paged_list.dart';
 import '../../widgets/common/feedback/reason_sheet.dart';
-import '../../widgets/common/motion/fade_slide_in.dart';
 import '../../widgets/layout/patient_page.dart';
 
 /// Confirmed visits with the remaining free-cancellation time and cancel-with-reason.
@@ -30,30 +27,20 @@ class AppointmentsScreen extends ConsumerWidget {
     return PatientPage(
       title: AppointmentTexts.listTitle,
       onRefresh: controller.refresh,
-      child: AsyncBody(
+      child: PagedList<Appointment>(
         value: appointments,
+        idOf: (item) => item.id,
+        emptyIcon: Icons.calendar_month_rounded,
+        emptyTitle: AppointmentTexts.empty,
+        emptyHint: AppointmentTexts.emptyHint,
         onRetry: controller.refresh,
-        data: (paged) => paged.items.isEmpty
-            ? const EmptyState(icon: Icons.calendar_month_rounded, title: AppointmentTexts.empty, hint: AppointmentTexts.emptyHint)
-            : Column(
-                children: [
-                  for (var i = 0; i < paged.items.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: FadeSlideIn(
-                        key: ValueKey(paged.items[i].id),
-                        index: i,
-                        child: AppointmentCard(
-                          appointment: paged.items[i],
-                          clinicianName: names[paged.items[i].clinicianId] ?? '',
-                          now: now,
-                          onCancel: () => _cancel(context, ref, paged.items[i]),
-                        ),
-                      ),
-                    ),
-                  LoadMoreFooter(hasNext: paged.hasNext, onLoadMore: controller.loadMore),
-                ],
-              ),
+        onLoadMore: controller.loadMore,
+        itemBuilder: (item) => AppointmentCard(
+          appointment: item,
+          clinicianName: names[item.clinicianId] ?? '',
+          now: now,
+          onCancel: () => _cancel(context, ref, item),
+        ),
       ),
     );
   }

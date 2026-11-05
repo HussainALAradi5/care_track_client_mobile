@@ -8,11 +8,8 @@ import '../../models/care/booking.dart';
 import '../../models/ui/confirm_config.dart';
 import '../../widgets/care/booking_card.dart';
 import '../../widgets/common/feedback/app_snack.dart';
-import '../../widgets/common/feedback/async_body.dart';
 import '../../widgets/common/feedback/confirm_sheet.dart';
-import '../../widgets/common/feedback/empty_state.dart';
-import '../../widgets/common/feedback/load_more_footer.dart';
-import '../../widgets/common/motion/fade_slide_in.dart';
+import '../../widgets/common/feedback/paged_list.dart';
 import '../../widgets/layout/patient_page.dart';
 
 /// The patient's booking requests, newest first, with withdraw while still waiting.
@@ -27,29 +24,19 @@ class BookingsScreen extends ConsumerWidget {
     return PatientPage(
       title: BookingTexts.listTitle,
       onRefresh: controller.refresh,
-      child: AsyncBody(
+      child: PagedList<Booking>(
         value: bookings,
+        idOf: (item) => item.id,
+        emptyIcon: Icons.event_note_rounded,
+        emptyTitle: BookingTexts.emptyList,
+        emptyHint: BookingTexts.emptyListHint,
         onRetry: controller.refresh,
-        data: (paged) => paged.items.isEmpty
-            ? const EmptyState(icon: Icons.event_note_rounded, title: BookingTexts.emptyList, hint: BookingTexts.emptyListHint)
-            : Column(
-                children: [
-                  for (var i = 0; i < paged.items.length; i++)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: FadeSlideIn(
-                        key: ValueKey(paged.items[i].id),
-                        index: i,
-                        child: BookingCard(
-                          booking: paged.items[i],
-                          clinicianName: names[paged.items[i].clinicianId] ?? '',
-                          onWithdraw: () => _withdraw(context, ref, paged.items[i]),
-                        ),
-                      ),
-                    ),
-                  LoadMoreFooter(hasNext: paged.hasNext, onLoadMore: controller.loadMore),
-                ],
-              ),
+        onLoadMore: controller.loadMore,
+        itemBuilder: (item) => BookingCard(
+          booking: item,
+          clinicianName: names[item.clinicianId] ?? '',
+          onWithdraw: () => _withdraw(context, ref, item),
+        ),
       ),
     );
   }

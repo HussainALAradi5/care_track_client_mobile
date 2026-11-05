@@ -5,10 +5,11 @@ import '../../constants/texts/appointment_texts.dart';
 import '../../enums/ui/button_variant.dart';
 import '../../models/care/appointment.dart';
 import '../../utilities/time/dates.dart';
+import '../../enums/ui/avatar_tone.dart';
 import '../common/buttons/app_button.dart';
+import '../common/display/avatar.dart';
 import '../common/progress/countdown_meter.dart';
 import '../common/status/status_chip.dart';
-import '../../constants/brand_colors.dart';
 
 /// One appointment. While scheduled, a draining meter shows how long free cancellation stays open
 /// (the server's stored deadline); the cancel action disappears once the window has closed.
@@ -57,14 +58,7 @@ class AppointmentCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: highlight ? BrandColors.onGradientPanel : scheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(Icons.medical_services_rounded, color: onCard ?? scheme.onPrimaryContainer),
-              ),
+              Avatar(icon: Icons.medical_services_rounded, tone: highlight ? AvatarTone.inverse : AvatarTone.primary),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

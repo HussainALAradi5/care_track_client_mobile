@@ -1,6 +1,6 @@
 import '../../enums/care/appointment_status.dart';
 
-/// Server AppointmentDto (the patient-facing fields).
+/// Server AppointmentDto.
 class Appointment {
   const Appointment({
     required this.id,
@@ -13,6 +13,8 @@ class Appointment {
     required this.createdAt,
     required this.status,
     required this.version,
+    this.patientName = '',
+    this.clinicianName = '',
     this.checkedInAt,
     this.noShowAt,
     this.noShowReason,
@@ -32,6 +34,8 @@ class Appointment {
   final DateTime createdAt;
   final AppointmentStatus status;
   final int version;
+  final String patientName;
+  final String clinicianName;
   final DateTime? checkedInAt;
   final DateTime? noShowAt;
   final String? noShowReason;
@@ -53,6 +57,8 @@ class Appointment {
     createdAt: DateTime.parse(json['createdAt'] as String).toLocal(),
     status: AppointmentStatus.fromWire(json['status'] as String),
     version: (json['version'] as num).toInt(),
+    patientName: json['patientName'] as String? ?? '',
+    clinicianName: json['clinicianName'] as String? ?? '',
     checkedInAt: _optionalDate(json['checkedInAt']),
     noShowAt: _optionalDate(json['noShowAt']),
     noShowReason: json['noShowReason'] as String?,
