@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../constants/shift_rules.dart';
 import '../../constants/texts/shift_texts.dart';
@@ -12,6 +11,9 @@ import '../../utilities/time/dates.dart';
 import '../../utilities/workforce/shift_interval.dart';
 import '../common/buttons/app_button.dart';
 import '../common/feedback/app_snack.dart';
+import '../common/inputs/picker_field.dart';
+import 'shift_preview.dart';
+import 'shift_quick_starts.dart';
 
 /// Add a shift: who, the day (calendar from today), the start (one-tap usual starts or the clock picker) and
 /// the length, with a live preview that refuses a start in the past.
@@ -57,11 +59,9 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scheme = theme.colorScheme;
-    final now = ref.watch(nowProvider);
+    final muted = theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant);
     final interval = shiftInterval(_day, _time, _hours);
-    final inPast = !interval.startsAt.isAfter(now);
-    final ready = _clinicianId != null && !inPast;
+    final inPast = !interval.startsAt.isAfter(ref.watch(nowProvider));
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -71,7 +71,7 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
             Text(ShiftTexts.addTitle, style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 12),
             if (widget.clinicians.isEmpty)
-              Text(ShiftTexts.noClinicians, style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant))
+              Text(ShiftTexts.noClinicians, style: muted)
             else
               DropdownButtonFormField<String>(
                 initialValue: _clinicianId,
@@ -80,32 +80,19 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
                 onChanged: (id) => setState(() => _clinicianId = id),
               ),
             const SizedBox(height: 12),
-            _PickerField(
+            PickerField(
               label: ShiftTexts.date,
-              value: DateFormat('EEE, d MMM y').format(_day),
+              value: longDate(_day),
               icon: Icons.calendar_month_rounded,
               onTap: _pickDay,
             ),
             const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final q in ShiftRules.quickStarts)
-                  ChoiceChip(
-                    avatar: Icon(q.icon, size: 18),
-                    label: Text('${q.label} ${q.time.format(context)}'),
-                    selected: sameTimeOfDay(q.time, _time),
-                    showCheckmark: false,
-                    onSelected: (_) => setState(() => _time = q.time),
-                  ),
-              ],
-            ),
+            ShiftQuickStarts(selected: _time, onPick: (time) => setState(() => _time = time)),
             const SizedBox(height: 12),
             Row(
               children: [
                 Expanded(
-                  child: _PickerField(
+                  child: PickerField(
                     label: ShiftTexts.start,
                     value: _time.format(context),
                     icon: Icons.schedule_rounded,
@@ -127,66 +114,21 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
               ],
             ),
             const SizedBox(height: 12),
-            AnimatedContainer(
-              duration: const Duration(milliseconds: 250),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: inPast ? scheme.errorContainer : scheme.secondaryContainer,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    inPast ? Icons.error_outline_rounded : Icons.event_rounded,
-                    size: 20,
-                    color: inPast ? scheme.onErrorContainer : scheme.onSecondaryContainer,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      inPast
-                          ? ShiftTexts.inPast
-                          : '${ShiftTexts.preview}: ${visitTime(interval.startsAt, interval.endsAt)}',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: inPast ? scheme.onErrorContainer : scheme.onSecondaryContainer,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            ShiftPreview(startsAt: interval.startsAt, endsAt: interval.endsAt, inPast: inPast),
             if (_clinicianId == null && widget.clinicians.isNotEmpty) ...[
               const SizedBox(height: 8),
-              Text(
-                ShiftTexts.pickClinician,
-                style: theme.textTheme.bodySmall?.copyWith(color: scheme.onSurfaceVariant),
-              ),
+              Text(ShiftTexts.pickClinician, style: muted),
             ],
             const SizedBox(height: 12),
-            AppButton(label: ShiftTexts.add, icon: Icons.add_rounded, expand: true, onPressed: ready ? _add : null),
+            AppButton(
+              label: ShiftTexts.add,
+              icon: Icons.add_rounded,
+              expand: true,
+              onPressed: _clinicianId != null && !inPast ? _add : null,
+            ),
           ],
         ),
       ),
     );
   }
-}
-
-/// A read-only field that opens a picker when tapped.
-class _PickerField extends StatelessWidget {
-  const _PickerField({required this.label, required this.value, required this.icon, required this.onTap});
-
-  final String label;
-  final String value;
-  final IconData icon;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) => InkWell(
-    borderRadius: BorderRadius.circular(4),
-    onTap: onTap,
-    child: InputDecorator(
-      decoration: InputDecoration(labelText: label, suffixIcon: Icon(icon)),
-      child: Text(value),
-    ),
-  );
 }

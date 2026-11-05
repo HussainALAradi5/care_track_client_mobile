@@ -11,3 +11,6 @@ String visitTime(DateTime startsAt, DateTime endsAt) {
 }
 
 String shortDateTime(DateTime value) => DateFormat('d MMM, HH:mm').format(value);
+
+/// 'Thu, 5 Nov 2026' in the device's locale (a picked day in a form).
+String longDate(DateTime value) => DateFormat('EEE, d MMM y').format(value);
