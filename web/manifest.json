@@ -1,11 +1,11 @@
 {
-    "name": "care_track_client_mobile",
-    "short_name": "care_track_client_mobile",
+    "name": "CareTrack",
+    "short_name": "CareTrack",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "CareTrack patient app: book visits and follow your care.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
