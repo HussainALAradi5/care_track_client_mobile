@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../services/accounting/accounting_service.dart';
 import '../../services/api/api_client.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/auth/token_storage.dart';
@@ -11,7 +12,9 @@ import '../../services/care/booking_service.dart';
 import '../../services/care/care_team_service.dart';
 import '../../services/identity/enrollment_service.dart';
 import '../../services/identity/session_service.dart';
+import '../../services/documents/written_document_service.dart';
 import '../../services/identity/staff_hospital_service.dart';
+import '../../services/identity/staff_organization_service.dart';
 import '../../services/workforce/shift_service.dart';
 
 /// Loaded in main() before the app starts, then overridden in the ProviderScope.
@@ -32,3 +35,6 @@ final bookingServiceProvider = Provider((ref) => BookingService(ref.watch(apiCli
 final appointmentServiceProvider = Provider((ref) => AppointmentService(ref.watch(apiClientProvider)));
 final staffHospitalServiceProvider = Provider((ref) => StaffHospitalService(ref.watch(apiClientProvider)));
 final shiftServiceProvider = Provider((ref) => ShiftService(ref.watch(apiClientProvider)));
+final staffOrganizationServiceProvider = Provider((ref) => StaffOrganizationService(ref.watch(apiClientProvider)));
+final accountingServiceProvider = Provider((ref) => AccountingService(ref.watch(apiClientProvider)));
+final writtenDocumentServiceProvider = Provider((ref) => WrittenDocumentService(ref.watch(apiClientProvider)));

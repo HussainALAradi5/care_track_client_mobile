@@ -20,6 +20,12 @@ class AppointmentService {
   Future<Appointment> cancel(Appointment appointment, String reason) =>
       _reasoned(Endpoints.cancelAppointment(appointment.hospitalId, appointment.id), appointment, reason);
 
+  /// Clinicians: their own visits at the hospital.
+  Future<PageResult<Appointment>> clinicianMine(String hospitalId, PageRequest request) async => PageResult.fromJson(
+    await _api.get(Endpoints.clinicianAppointments(hospitalId), query: request.toQuery()),
+    Appointment.fromJson,
+  );
+
   /// Staff: the hospital's appointments (the desk asks for one status, soonest first).
   Future<PageResult<Appointment>> list(String hospitalId, PageRequest request) async => PageResult.fromJson(
     await _api.get(Endpoints.hospitalAppointments(hospitalId), query: request.toQuery()),

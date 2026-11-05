@@ -28,6 +28,12 @@ class ApiClient {
     return response.data!;
   }
 
+  /// For routes that answer a JSON array rather than an object.
+  Future<List<dynamic>> getList(String path, {Map<String, dynamic>? query}) async {
+    final response = await _dio.get<List<dynamic>>(path, queryParameters: query);
+    return response.data!;
+  }
+
   /// [headers] carries per-call headers such as the Idempotency-Key retry-safe writes need.
   Future<Map<String, dynamic>> post(
     String path, {

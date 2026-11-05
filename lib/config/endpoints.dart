@@ -4,6 +4,7 @@ class Endpoints {
 
   static const me = '/auth/me';
   static const myStaffHospitals = '/auth/me/hospitals';
+  static const myOrganizations = '/auth/me/organizations';
   static const myHospitals = '/patients/me/hospitals';
   static String myCareTeam(String hospitalId) => '/hospitals/$hospitalId/patients/me/care-team';
   static String myAppointments(String hospitalId) => '/hospitals/$hospitalId/patients/me/appointments';
@@ -30,4 +31,22 @@ class Endpoints {
   static String shifts(String hospitalId) => '/hospitals/$hospitalId/clinician-shifts';
   static String shift(String hospitalId, String shiftId) => '/hospitals/$hospitalId/clinician-shifts/$shiftId';
   static String clinicians(String hospitalId) => '/hospitals/$hospitalId/clinicians';
+  static String clinicianAppointments(String hospitalId) => '/hospitals/$hospitalId/clinicians/me/appointments';
+
+  // Documents
+  static const myDocuments = '/patients/me/documents';
+  static String myDocument(String documentId) => '/patients/me/documents/$documentId';
+  static String visitDocuments(String hospitalId, String appointmentId) =>
+      '/hospitals/$hospitalId/appointments/$appointmentId/documents';
+  static String visitDocument(String hospitalId, String appointmentId, String documentId) =>
+      '/hospitals/$hospitalId/appointments/$appointmentId/documents/$documentId';
+
+  // Accounting (one Organization's books)
+  static String _books(String organizationId) => '/organizations/$organizationId/accounting';
+  static String accountingStatus(String organizationId) => '${_books(organizationId)}/status';
+  static String monthSummary(String organizationId) => '${_books(organizationId)}/reports/month-summary';
+  static String report(String organizationId, String kind) => '${_books(organizationId)}/reports/$kind';
+  static String journal(String organizationId) => '${_books(organizationId)}/journal-entries';
+  static String journalEntry(String organizationId, String entryId) =>
+      '${_books(organizationId)}/journal-entries/$entryId';
 }
