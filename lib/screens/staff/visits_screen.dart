@@ -15,6 +15,7 @@ import '../../widgets/common/status/status_chip.dart';
 import '../../widgets/documents/document_sheet.dart';
 import '../../widgets/documents/document_tile.dart';
 import '../../widgets/layout/staff_page.dart';
+import '../../widgets/care/visit_place.dart';
 
 const _arrived = {AppointmentStatus.checkedIn, AppointmentStatus.inProgress, AppointmentStatus.completed};
 
@@ -45,7 +46,14 @@ class VisitsScreen extends ConsumerWidget {
             child: ListTile(
               onTap: () => _openVisit(context, a),
               title: Text(a.patientName, maxLines: 1, overflow: TextOverflow.ellipsis),
-              subtitle: Text(time.format(a.startsAt)),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(time.format(a.startsAt)),
+                  const SizedBox(height: 6),
+                  VisitPlace(appointment: a),
+                ],
+              ),
               trailing: StatusChip(status: StatusStyles.appointment[a.status]!),
             ),
           ),

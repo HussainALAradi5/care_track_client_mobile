@@ -8,6 +8,8 @@ import '../../utilities/time/dates.dart';
 import '../common/buttons/app_button.dart';
 import '../common/display/avatar.dart';
 import '../common/status/status_chip.dart';
+import '../../utilities/care/visit_place.dart';
+import 'visit_place.dart';
 
 /// One appointment at the desk: patient, clinician, time, status, and only the actions open to this staff
 /// member right now (a null callback hides its button).
@@ -40,7 +42,7 @@ class DeskRow extends StatelessWidget {
                     children: [
                       Text(a.patientName, style: theme.textTheme.titleSmall, overflow: TextOverflow.ellipsis),
                       Text(
-                        '${visitTime(a.startsAt, a.endsAt)} · ${StaffTexts.withClinician(a.clinicianName)}',
+                        '${visitTime(a.startsAt, a.endsAt)} · ${StaffTexts.withClinician(clinicianLabel(a))}',
                         style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                       ),
                     ],
@@ -50,6 +52,8 @@ class DeskRow extends StatelessWidget {
                 StatusChip(status: StatusStyles.appointment[a.status]!),
               ],
             ),
+            const SizedBox(height: 10),
+            VisitPlace(appointment: a),
             if (hasActions) ...[
               const SizedBox(height: 12),
               Wrap(

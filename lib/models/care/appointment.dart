@@ -1,6 +1,8 @@
+import '../../enums/care/appointment_room_source.dart';
 import '../../enums/care/appointment_status.dart';
+import '../../enums/identity/user_type.dart';
 
-/// Server AppointmentDto.
+/// Server AppointmentDto, with where the visit happens: Hospital, the clinician's department and the room.
 class Appointment {
   const Appointment({
     required this.id,
@@ -15,6 +17,11 @@ class Appointment {
     required this.version,
     this.patientName = '',
     this.clinicianName = '',
+    this.hospitalName = '',
+    this.clinicianType,
+    this.departmentName,
+    this.roomName,
+    this.roomSource,
     this.checkedInAt,
     this.noShowAt,
     this.noShowReason,
@@ -36,6 +43,15 @@ class Appointment {
   final int version;
   final String patientName;
   final String clinicianName;
+  final String hospitalName;
+  final UserType? clinicianType;
+
+  /// The clinician's department at this Hospital, when they are assigned to one.
+  final String? departmentName;
+
+  /// The session's room once the visit has one, else the clinician's planned room at the start time, else null.
+  final String? roomName;
+  final AppointmentRoomSource? roomSource;
   final DateTime? checkedInAt;
   final DateTime? noShowAt;
   final String? noShowReason;
@@ -59,6 +75,11 @@ class Appointment {
     version: (json['version'] as num).toInt(),
     patientName: json['patientName'] as String? ?? '',
     clinicianName: json['clinicianName'] as String? ?? '',
+    hospitalName: json['hospitalName'] as String? ?? '',
+    clinicianType: json['clinicianType'] == null ? null : UserType.fromWire(json['clinicianType'] as String),
+    departmentName: json['departmentName'] as String?,
+    roomName: json['roomName'] as String?,
+    roomSource: AppointmentRoomSource.fromWire(json['roomSource'] as String?),
     checkedInAt: _optionalDate(json['checkedInAt']),
     noShowAt: _optionalDate(json['noShowAt']),
     noShowReason: json['noShowReason'] as String?,
