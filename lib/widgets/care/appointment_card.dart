@@ -10,8 +10,11 @@ import '../common/buttons/app_button.dart';
 import '../common/display/avatar.dart';
 import '../common/progress/countdown_meter.dart';
 import '../common/status/status_chip.dart';
+import '../../utilities/care/visit_place.dart';
+import 'visit_place.dart';
 
-/// One appointment. While scheduled, a draining meter shows how long free cancellation stays open
+/// One appointment: when, with whom (the doctor's or nurse's title on their name) and where (hospital, department
+/// and room badges). While scheduled, a draining meter shows how long free cancellation stays open
 /// (the server's stored deadline); the cancel action disappears once the window has closed.
 class AppointmentCard extends StatelessWidget {
   const AppointmentCard({
@@ -66,7 +69,7 @@ class AppointmentCard extends StatelessWidget {
                   children: [
                     Text(visitTime(a.startsAt, a.endsAt), style: theme.textTheme.titleSmall?.copyWith(color: onCard)),
                     Text(
-                      clinicianName.isEmpty ? a.code : clinicianName,
+                      a.clinicianName.isNotEmpty ? clinicianLabel(a) : (clinicianName.isEmpty ? a.code : clinicianName),
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodySmall?.copyWith(color: onCard?.withValues(alpha: 0.85) ?? scheme.onSurfaceVariant),
                     ),
@@ -76,6 +79,8 @@ class AppointmentCard extends StatelessWidget {
               StatusChip(status: StatusStyles.appointment[a.status]!),
             ],
           ),
+          const SizedBox(height: 12),
+          VisitPlace(appointment: a),
           if (a.scheduled) ...[
             const SizedBox(height: 16),
             CountdownMeter(
