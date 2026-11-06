@@ -7,14 +7,20 @@ import '../../controllers/auth/auth_controller.dart';
 import '../../widgets/common/brand/brand_mark.dart';
 import '../../widgets/common/brand/glow_blob.dart';
 import '../../widgets/common/buttons/app_button.dart';
+import '../../widgets/common/feedback/app_snack.dart';
 import '../../widgets/common/motion/fade_slide_in.dart';
 
-/// Hands sign-in to the identity provider in the system browser; the router moves on once signed in.
+/// Hands sign-in to the identity provider in the system browser; the router moves on once signed in. A sign-in that
+/// fails (for example one without a CareTrack account yet) says why.
 class SignInScreen extends ConsumerWidget {
   const SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.listen(authControllerProvider, (_, next) {
+      final error = next.error;
+      if (next is AsyncError && error != null) AppSnack.error(context, error);
+    });
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
     return Scaffold(

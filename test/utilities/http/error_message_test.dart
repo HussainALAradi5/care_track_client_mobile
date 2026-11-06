@@ -19,6 +19,11 @@ void main() {
     expect(errorMessageOf(_api('SOMETHING_NEW', 'Explained by server')), 'Explained by server');
   });
 
+  test('a sign-in without an account is told to finish signing up first', () {
+    expect(errorMessageOf(_api('SIGN_UP_REQUIRED')), CommonTexts.errorCodes['SIGN_UP_REQUIRED']);
+    expect(CommonTexts.errorCodes['SIGN_UP_REQUIRED'], contains('Finish signing up'));
+  });
+
   test('connection failures read as offline, user-facing errors pass through, others are generic', () {
     final offline = DioException(requestOptions: RequestOptions(path: '/x'), type: DioExceptionType.connectionError);
     expect(errorMessageOf(offline), CommonTexts.offline);
