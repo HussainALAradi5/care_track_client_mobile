@@ -30,6 +30,7 @@ void main() {
     );
     expect(visitPlaceBadges(visit({'roomName': 'Room 1', 'roomSource': 'PLANNED'})).last.label, 'Room 1 (planned)');
     expect(visitPlaceBadges(visit({})).map((b) => b.label), ['Manama Hospital', 'Room to be set']);
+    expect(visitPlaceBadges(visit({'status': 'NO_SHOW'})).map((b) => b.label), ['Manama Hospital']);
   });
 
   test('gives doctors and nurses their title', () {
