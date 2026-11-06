@@ -42,15 +42,8 @@ class AppointmentCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: highlight ? null : scheme.surfaceContainerLowest,
+        color: highlight ? scheme.primary : scheme.surfaceContainerLowest,
         border: highlight ? null : Border.all(color: scheme.outlineVariant),
-        gradient: highlight
-            ? LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [scheme.primary, Color.lerp(scheme.primary, scheme.tertiary, 0.45)!],
-              )
-            : null,
         boxShadow: highlight
             ? [BoxShadow(color: scheme.primary.withValues(alpha: 0.3), blurRadius: 18, offset: const Offset(0, 8))]
             : null,
