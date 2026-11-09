@@ -1,4 +1,5 @@
 import 'package:care_track_client_mobile/controllers/chat/chat_conversations_controller.dart';
+import 'package:care_track_client_mobile/models/chat/chat_message.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -25,5 +26,19 @@ void main() {
     paged = c.read(chatConversationsProvider).value!;
     expect(paged.items.map((c) => c.id), ['c1', 'c2']);
     expect(paged.hasNext, isFalse);
+  });
+
+  test('a replayed frame does not count as unread twice', () async {
+    final h = await chatHarness((r) => pageJson([conversationJson('c1', lastSequence: 2)]));
+    addTearDown(h.container.dispose);
+    final c = h.container;
+    await c.read(chatConversationsProvider.future);
+    final notifier = c.read(chatConversationsProvider.notifier);
+    final message = ChatMessage.fromJson(messageJson(3));
+
+    notifier.applyMessage(message, isOpen: false);
+    notifier.applyMessage(message, isOpen: false);
+
+    expect(c.read(chatConversationsProvider).value!.items.single.unreadCount, 1);
   });
 }

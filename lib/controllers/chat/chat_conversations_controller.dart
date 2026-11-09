@@ -61,9 +61,11 @@ class ChatConversationsController extends AsyncNotifier<PagedItems<Conversation>
       return;
     }
     final conversation = current[index];
+    // A sequence already seen is a replay, which must not count or move the row twice.
+    if (message.sequence <= conversation.lastSequence) return;
     final fromOther = message.senderId != conversation.myUserId;
     final updated = conversation.copyWith(
-      lastSequence: message.sequence > conversation.lastSequence ? message.sequence : conversation.lastSequence,
+      lastSequence: message.sequence,
       lastMessageAt: message.createdAt,
       unreadCount: conversation.unreadCount + (fromOther && !isOpen ? 1 : 0),
     );

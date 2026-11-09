@@ -22,20 +22,28 @@ class ThreadMessages extends StatelessWidget {
     if (thread.loading) return const Center(child: CircularProgressIndicator());
     if (thread.failed) return const Center(child: Text(ChatTexts.loadFailed));
     final myUserId = conversation?.myUserId;
-    return ListView(
+    final olderCount = thread.hasOlder ? 1 : 0;
+    final messageCount = thread.messages.length;
+    return ListView.builder(
       padding: const EdgeInsets.all(12),
-      children: [
-        if (thread.hasOlder) TextButton(onPressed: controller.loadOlder, child: const Text(ChatTexts.loadOlder)),
-        for (final message in thread.messages)
-          MessageBubble(
-            message: message,
-            mine: message.senderId == myUserId,
-            receipt: conversation == null ? ReceiptState.sent : receiptStateOf(message, conversation!),
-            onReply: () => controller.setReplyTo(message),
-          ),
-        for (final outgoing in thread.outgoing)
-          OutgoingBubble(message: outgoing, onRetry: () => controller.retry(outgoing)),
-      ],
+      itemCount: olderCount + messageCount + thread.outgoing.length,
+      itemBuilder: (_, index) {
+        if (index < olderCount) {
+          return TextButton(onPressed: controller.loadOlder, child: const Text(ChatTexts.loadOlder));
+        }
+        final position = index - olderCount;
+        if (position >= messageCount) {
+          final outgoing = thread.outgoing[position - messageCount];
+          return OutgoingBubble(message: outgoing, onRetry: () => controller.retry(outgoing));
+        }
+        final message = thread.messages[position];
+        return MessageBubble(
+          message: message,
+          mine: message.senderId == myUserId,
+          receipt: conversation == null ? ReceiptState.sent : receiptStateOf(message, conversation!),
+          onReply: () => controller.setReplyTo(message),
+        );
+      },
     );
   }
 }
