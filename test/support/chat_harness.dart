@@ -12,6 +12,7 @@ import 'package:care_track_client_mobile/services/api/api_client.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 typedef Respond = FutureOr<Object?> Function(RequestOptions request);
 
@@ -149,5 +150,15 @@ Map<String, dynamic> messagesJson(List<Map<String, dynamic>> items, {bool hasMor
   'nextBefore': nextBefore,
 };
 
-/// Lets queued work (microtasks and fake-server replies) finish.
-Future<void> settle() => Future<void>.delayed(const Duration(milliseconds: 20));
+/// Runs [check] until it stops failing, for work that finishes on the event loop; times out after a few seconds.
+Future<void> eventually(void Function() check) async {
+  final deadline = DateTime.now().add(const Duration(seconds: 3));
+  while (true) {
+    try {
+      return check();
+    } on TestFailure {
+      if (DateTime.now().isAfter(deadline)) rethrow;
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+    }
+  }
+}

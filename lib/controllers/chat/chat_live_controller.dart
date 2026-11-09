@@ -16,7 +16,12 @@ final chatLiveProvider = Provider<void>((ref) {
   if (!signedIn) return;
   final channel = ref.read(realtimeChannelProvider);
   final frames = channel.watch(Realtime.chatQueue).listen((frame) => _receive(ref, frame));
-  final reconnects = channel.opened.listen((_) => ref.invalidate(chatConversationsProvider));
+  final reconnects = channel.opened.listen((_) {
+    ref.invalidate(chatConversationsProvider);
+    for (final conversationId in ref.read(openChatThreadsProvider)) {
+      ref.read(chatThreadProvider(conversationId).notifier).reload();
+    }
+  });
   channel.connect();
   ref.onDispose(() {
     frames.cancel();

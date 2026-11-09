@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../models/chat/chat_message.dart';
@@ -17,6 +19,8 @@ class ChatThreadController extends Notifier<ChatThreadState> {
   @override
   ChatThreadState build() {
     if (ref.watch(signedInUserIdProvider) == null) return const ChatThreadState(loading: false);
+    final open = ref.read(openChatThreadsProvider)..add(conversationId);
+    ref.onDispose(() => open.remove(conversationId));
     Future.microtask(load);
     return const ChatThreadState();
   }
@@ -37,12 +41,34 @@ class ChatThreadController extends Notifier<ChatThreadState> {
     }
   }
 
+  /// The newest page again after the channel dropped: what is on screen stays, and only what was missed comes in.
+  Future<void> reload() async {
+    try {
+      final page = await ref.read(chatServiceProvider).messages(conversationId);
+      final newestShown = state.messages.isEmpty ? 0 : state.messages.last.sequence;
+      final oldestOfPage = page.items.isEmpty ? newestShown : page.items.map((m) => m.sequence).reduce(min);
+      final leavesGap = page.hasMore && oldestOfPage > newestShown + 1;
+      state = leavesGap || state.messages.isEmpty
+          ? state.copyWith(
+              messages: _ordered(page.items),
+              loading: false,
+              failed: false,
+              hasOlder: page.hasMore,
+              nextBefore: () => page.nextBefore,
+            )
+          : state.copyWith(messages: _merge(state.messages, page.items), loading: false, failed: false);
+      _reportSeen();
+    } catch (_) {
+      // What is on screen stays; the next reconnect or opening the thread reads it again.
+    }
+  }
+
   Future<void> loadOlder() async {
     final before = state.nextBefore;
     if (before == null || !state.hasOlder) return;
     final page = await ref.read(chatServiceProvider).messages(conversationId, before: before);
     state = state.copyWith(
-      messages: _ordered([...state.messages, ...page.items]),
+      messages: _merge(state.messages, page.items),
       hasOlder: page.hasMore,
       nextBefore: () => page.nextBefore,
     );
@@ -110,7 +136,14 @@ class ChatThreadController extends Notifier<ChatThreadState> {
 
   static List<ChatMessage> _ordered(List<ChatMessage> messages) =>
       ([...messages]..sort((a, b) => a.sequence.compareTo(b.sequence)));
+
+  /// A page joined to what is held; the page wins for a message in both, since it is the newer copy.
+  static List<ChatMessage> _merge(List<ChatMessage> held, List<ChatMessage> page) =>
+      _ordered([...{for (final m in [...held, ...page]) m.id: m}.values]);
 }
+
+/// Conversations with a thread controller alive, for what must reach all of them at once, such as a reconnect.
+final openChatThreadsProvider = Provider<Set<String>>((ref) => <String>{});
 
 final chatThreadProvider = NotifierProvider.autoDispose.family<ChatThreadController, ChatThreadState, String>(
   ChatThreadController.new,

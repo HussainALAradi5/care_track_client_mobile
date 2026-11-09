@@ -72,13 +72,11 @@ void main() {
     final c = h.container;
     final thread = chatThreadProvider('c1');
     final sub = c.listen(thread, (_, _) {});
-    await settle();
-    expect(c.read(thread).messages, isNotEmpty);
+    await eventually(() => expect(c.read(thread).messages, isNotEmpty));
 
     (c.read(authControllerProvider.notifier) as SwitchableAuth).become(null);
-    await settle();
 
-    expect(c.read(thread).messages, isEmpty);
+    await eventually(() => expect(c.read(thread).messages, isEmpty));
     sub.close();
   });
 }
