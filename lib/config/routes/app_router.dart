@@ -26,7 +26,11 @@ import '../../screens/staff/attendance_screen.dart';
 import '../../screens/staff/desk_screen.dart';
 import '../../screens/staff/leave_requests_screen.dart';
 import '../../screens/staff/leave_screen.dart';
+import '../../screens/staff/department_screen.dart';
 import '../../screens/staff/my_requests_screen.dart';
+import '../../screens/staff/payslip_detail_screen.dart';
+import '../../screens/staff/payslips_screen.dart';
+import '../../screens/staff/team_screen.dart';
 import '../../screens/staff/queue_screen.dart';
 import '../../screens/staff/shifts_screen.dart';
 import '../../screens/staff/staff_overview_screen.dart';
@@ -125,6 +129,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           ),
           GoRoute(path: RoutePaths.staffLeaveRequests, builder: (_, _) => const LeaveRequestsScreen()),
           GoRoute(path: RoutePaths.staffAttendance, builder: (_, _) => const AttendanceScreen()),
+          GoRoute(path: RoutePaths.staffPayslips, builder: (_, _) => const PayslipsScreen()),
+          GoRoute(
+            path: '${RoutePaths.staffPayslips}/:payslipId',
+            builder: (_, state) => PayslipDetailScreen(payslipId: state.pathParameters['payslipId']!),
+          ),
+          GoRoute(path: RoutePaths.staffTeam, builder: (_, _) => const TeamScreen()),
+          GoRoute(path: RoutePaths.staffDepartment, builder: (_, _) => const DepartmentScreen()),
         ],
       ),
       ShellRoute(

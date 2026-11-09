@@ -23,6 +23,10 @@ class RoutePaths {
   static const staffVisits = '/staff/visits';
   static const staffRequests = '/staff/requests';
   static const staffAttendance = '/staff/attendance';
+  static const staffPayslips = '/staff/payslips';
+  static String staffPayslip(String id) => '/staff/payslips/$id';
+  static const staffTeam = '/staff/team';
+  static const staffDepartment = '/staff/department';
   static const staffLeave = '/staff/leave';
   static String staffLeaveWithSickNote(String documentId) => '/staff/leave?sickNote=$documentId';
   static const staffLeaveRequests = '/staff/leave-requests';

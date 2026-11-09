@@ -6,8 +6,10 @@ import 'route_paths.dart';
 import 'texts/attendance_texts.dart';
 import 'texts/document_texts.dart';
 import 'texts/leave_texts.dart';
+import 'texts/payslip_texts.dart';
 import 'texts/staff_request_texts.dart';
 import 'texts/staff_texts.dart';
+import 'texts/team_texts.dart';
 
 /// Staff tabs in order; each shows only when the selected Hospital grants its permission.
 class StaffNav {
@@ -63,6 +65,24 @@ class StaffNav {
       icon: Icons.flight_takeoff_outlined,
       selectedIcon: Icons.flight_takeoff_rounded,
       path: RoutePaths.staffLeave,
+    ),
+    StaffNavItem(
+      label: PayslipTexts.nav,
+      icon: Icons.receipt_long_outlined,
+      selectedIcon: Icons.receipt_long_rounded,
+      path: RoutePaths.staffPayslips,
+    ),
+    StaffNavItem(
+      label: TeamTexts.navTeam,
+      icon: Icons.groups_outlined,
+      selectedIcon: Icons.groups_rounded,
+      path: RoutePaths.staffTeam,
+    ),
+    StaffNavItem(
+      label: TeamTexts.navDepartment,
+      icon: Icons.account_tree_outlined,
+      selectedIcon: Icons.account_tree_rounded,
+      path: RoutePaths.staffDepartment,
     ),
     StaffNavItem(
       label: StaffRequestTexts.nav,

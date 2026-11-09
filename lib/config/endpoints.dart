@@ -4,6 +4,10 @@ class Endpoints {
 
   static const me = '/auth/me';
   static const myPickerStyle = '/auth/me/picker-style';
+  static const myPayslips = '/auth/me/payslips';
+  static String myPayslip(String payslipId) => '/auth/me/payslips/$payslipId';
+  static const myTeam = '/auth/me/team';
+  static const myDepartments = '/auth/me/departments';
   static const signUp = '/auth/sign-up';
   static const linkInvitation = '/auth/link-invitation';
 
