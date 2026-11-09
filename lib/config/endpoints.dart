@@ -61,6 +61,14 @@ class Endpoints {
   static String cancelStaffRequest(String organizationId, String requestId) =>
       '${staffRequests(organizationId)}/$requestId/cancel';
 
+  // Leave (one Organization's)
+  static String myLeave(String organizationId) => '/organizations/$organizationId/leave/mine';
+  static String leaveRequests(String organizationId) => '/organizations/$organizationId/leave/requests';
+  static String leaveDecision(String organizationId, String requestId) =>
+      '${leaveRequests(organizationId)}/$requestId/decision';
+  static String leaveCancel(String organizationId, String requestId) =>
+      '${leaveRequests(organizationId)}/$requestId/cancel';
+
   // Documents
   static const myDocuments = '/patients/me/documents';
   static String myDocument(String documentId) => '/patients/me/documents/$documentId';

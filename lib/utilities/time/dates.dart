@@ -16,6 +16,12 @@ String visitTime(DateTime startsAt, DateTime endsAt) {
 
 String shortDateTime(DateTime value) => DateFormat('d MMM, HH:mm').format(value);
 
+/// '3 Mar – 5 Mar 2026', or one day when they are the same.
+String dayRange(DateTime start, DateTime end) {
+  final last = DateFormat('d MMM y').format(end);
+  return isSameDay(start, end) ? last : '${DateFormat('d MMM').format(start)} – $last';
+}
+
 /// '16:30': a clock time, always 24-hour.
 String timeOfDayLabel(DateTime value) => DateFormat.Hm().format(value);
 

@@ -10,6 +10,8 @@ class WrittenDocument {
     required this.authorName,
     required this.issuedAt,
     this.body,
+    this.restFrom,
+    this.restTo,
   });
 
   final String id;
@@ -22,6 +24,10 @@ class WrittenDocument {
   final DateTime issuedAt;
   final String? body;
 
+  /// The rest days of a sick leave note; null on other kinds.
+  final DateTime? restFrom;
+  final DateTime? restTo;
+
   factory WrittenDocument.fromJson(Map<String, dynamic> json) => WrittenDocument(
     id: json['id'] as String,
     title: json['title'] as String,
@@ -32,5 +38,7 @@ class WrittenDocument {
     authorName: json['authorName'] as String,
     issuedAt: DateTime.parse(json['issuedAt'] as String).toLocal(),
     body: json['body'] as String?,
+    restFrom: json['restFrom'] == null ? null : DateTime.parse(json['restFrom'] as String),
+    restTo: json['restTo'] == null ? null : DateTime.parse(json['restTo'] as String),
   );
 }

@@ -4,12 +4,16 @@ import '../models/ui/staff_nav_item.dart';
 import 'permission_codes.dart';
 import 'route_paths.dart';
 import 'texts/document_texts.dart';
+import 'texts/leave_texts.dart';
 import 'texts/staff_request_texts.dart';
 import 'texts/staff_texts.dart';
 
 /// Staff tabs in order; each shows only when the selected Hospital grants its permission.
 class StaffNav {
   const StaffNav._();
+
+  /// The phone's bottom bar: this many screens, then More for the rest (all of them when they fit).
+  static const visibleTabs = 4;
 
   static const items = [
     StaffNavItem(
@@ -39,6 +43,19 @@ class StaffNav {
       selectedIcon: Icons.medical_services_rounded,
       path: RoutePaths.staffVisits,
       permission: PermissionCodes.clinicalHistoryWrite,
+    ),
+    StaffNavItem(
+      label: LeaveTexts.navRequests,
+      icon: Icons.event_busy_outlined,
+      selectedIcon: Icons.event_busy_rounded,
+      path: RoutePaths.staffLeaveRequests,
+      permission: PermissionCodes.leaveReadAll,
+    ),
+    StaffNavItem(
+      label: LeaveTexts.nav,
+      icon: Icons.flight_takeoff_outlined,
+      selectedIcon: Icons.flight_takeoff_rounded,
+      path: RoutePaths.staffLeave,
     ),
     StaffNavItem(
       label: StaffRequestTexts.nav,

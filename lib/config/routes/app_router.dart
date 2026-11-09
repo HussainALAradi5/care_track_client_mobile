@@ -23,6 +23,8 @@ import '../../screens/patient/documents_screen.dart';
 import '../../screens/patient/bookings_screen.dart';
 import '../../screens/patient/home_screen.dart';
 import '../../screens/staff/desk_screen.dart';
+import '../../screens/staff/leave_requests_screen.dart';
+import '../../screens/staff/leave_screen.dart';
 import '../../screens/staff/my_requests_screen.dart';
 import '../../screens/staff/queue_screen.dart';
 import '../../screens/staff/shifts_screen.dart';
@@ -65,6 +67,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final onStaffRoute = at.startsWith(RoutePaths.staff);
       // Patients, and staff on "My care", are on the patient side.
       if (!user.userType.isStaff || ref.read(careModeProvider)) {
+        // A staff member on My care may still act on a sick note in My leave.
+        if (user.userType.isStaff && at == RoutePaths.staffLeave) return null;
         final leaves =
             onStaffRoute || onBooksRoute || at == RoutePaths.signIn || at == RoutePaths.signUp || at == RoutePaths.splash;
         return leaves ? RoutePaths.home : null;
@@ -114,6 +118,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(path: RoutePaths.staffShifts, builder: (_, _) => const ShiftsScreen()),
           GoRoute(path: RoutePaths.staffVisits, builder: (_, _) => const VisitsScreen()),
           GoRoute(path: RoutePaths.staffRequests, builder: (_, _) => const MyRequestsScreen()),
+          GoRoute(
+            path: RoutePaths.staffLeave,
+            builder: (_, state) => LeaveScreen(sickNoteId: state.uri.queryParameters['sickNote']),
+          ),
+          GoRoute(path: RoutePaths.staffLeaveRequests, builder: (_, _) => const LeaveRequestsScreen()),
         ],
       ),
       ShellRoute(

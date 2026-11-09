@@ -5,12 +5,18 @@ import '../../dtos/common/page_request.dart';
 import '../../models/common/page_result.dart';
 import '../../models/common/paged_items.dart';
 import '../../models/documents/written_document.dart';
+import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
 
 /// The patient's documents from every hospital, newest first (not tied to the selected hospital).
 class MyDocumentsController extends AsyncNotifier<PagedItems<WrittenDocument>> {
   @override
-  Future<PagedItems<WrittenDocument>> build() async => _toItems(await _fetch(0), const []);
+  Future<PagedItems<WrittenDocument>> build() async {
+    if (ref.watch(signedInUserIdProvider) == null) {
+      return const PagedItems<WrittenDocument>(items: [], nextPage: 0, hasNext: false);
+    }
+    return _toItems(await _fetch(0), const []);
+  }
 
   Future<void> refresh() async {
     ref.invalidateSelf();
@@ -41,6 +47,7 @@ final myDocumentsProvider = AsyncNotifierProvider<MyDocumentsController, PagedIt
 );
 
 /// One of the patient's documents with its body.
-final myDocumentProvider = FutureProvider.family<WrittenDocument, String>(
-  (ref, id) => ref.read(writtenDocumentServiceProvider).mineById(id),
-);
+final myDocumentProvider = FutureProvider.autoDispose.family<WrittenDocument, String>((ref, id) {
+  ref.watch(signedInUserIdProvider);
+  return ref.read(writtenDocumentServiceProvider).mineById(id);
+});

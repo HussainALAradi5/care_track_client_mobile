@@ -6,7 +6,6 @@ import 'package:care_track_client_mobile/models/facilities/opening_status.dart';
 import 'package:care_track_client_mobile/enums/facilities/opening_state.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 
