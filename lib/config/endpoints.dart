@@ -33,6 +33,12 @@ class Endpoints {
   static String clinicians(String hospitalId) => '/hospitals/$hospitalId/clinicians';
   static String clinicianAppointments(String hospitalId) => '/hospitals/$hospitalId/clinicians/me/appointments';
 
+  // Staff requests (one Organization's)
+  static String staffRequests(String organizationId) => '/organizations/$organizationId/staff-requests';
+  static String myStaffRequests(String organizationId) => '${staffRequests(organizationId)}/mine';
+  static String cancelStaffRequest(String organizationId, String requestId) =>
+      '${staffRequests(organizationId)}/$requestId/cancel';
+
   // Documents
   static const myDocuments = '/patients/me/documents';
   static String myDocument(String documentId) => '/patients/me/documents/$documentId';

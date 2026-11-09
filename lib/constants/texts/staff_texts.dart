@@ -48,8 +48,6 @@ class StaffTexts {
   };
 
   static const overviewTitle = 'Staff';
-  static const noStaffPages = 'No staff screens are open to you here.';
-  static const noStaffPagesHint = 'Your role at this hospital does not include the queue, the desk or shift planning.';
   static const noStaffHospital = 'You do not work at a hospital in CareTrack yet.';
   static const noStaffHospitalHint = 'Ask your administrator to give you a role at your hospital.';
   static const lockedTitle = 'This screen is not open to you here.';

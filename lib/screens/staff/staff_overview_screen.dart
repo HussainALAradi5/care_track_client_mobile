@@ -9,7 +9,7 @@ import '../../widgets/common/feedback/async_body.dart';
 import '../../widgets/common/feedback/empty_state.dart';
 import '../../widgets/layout/page_heading.dart';
 
-/// Where staff land: it opens their first permitted screen at the selected Hospital, or explains why there is none.
+/// Where staff land: it opens their first permitted screen at the selected Hospital (My requests is open to all).
 class StaffOverviewScreen extends ConsumerWidget {
   const StaffOverviewScreen({super.key});
 
@@ -17,7 +17,7 @@ class StaffOverviewScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final staff = ref.watch(staffContextProvider);
     final hospital = staff.value?.hospital;
-    final first = StaffNav.items.where((item) => hospital?.can(item.permission) ?? false).firstOrNull;
+    final first = StaffNav.items.where((item) => item.isOpenAt(hospital)).firstOrNull;
     if (first != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) context.go(first.path);
@@ -36,12 +36,6 @@ class StaffOverviewScreen extends ConsumerWidget {
                   icon: Icons.badge_rounded,
                   title: StaffTexts.noStaffHospital,
                   hint: StaffTexts.noStaffHospitalHint,
-                )
-              : first == null
-              ? const EmptyState(
-                  icon: Icons.lock_rounded,
-                  title: StaffTexts.noStaffPages,
-                  hint: StaffTexts.noStaffPagesHint,
                 )
               : const SizedBox.shrink(),
         ),

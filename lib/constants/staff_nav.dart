@@ -4,6 +4,7 @@ import '../models/ui/staff_nav_item.dart';
 import 'permission_codes.dart';
 import 'route_paths.dart';
 import 'texts/document_texts.dart';
+import 'texts/staff_request_texts.dart';
 import 'texts/staff_texts.dart';
 
 /// Staff tabs in order; each shows only when the selected Hospital grants its permission.
@@ -38,6 +39,12 @@ class StaffNav {
       selectedIcon: Icons.medical_services_rounded,
       path: RoutePaths.staffVisits,
       permission: PermissionCodes.clinicalHistoryWrite,
+    ),
+    StaffNavItem(
+      label: StaffRequestTexts.nav,
+      icon: Icons.assignment_outlined,
+      selectedIcon: Icons.assignment_rounded,
+      path: RoutePaths.staffRequests,
     ),
   ];
 }
