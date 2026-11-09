@@ -6,6 +6,7 @@ import '../../widgets/identity/profile/places_section.dart';
 import '../../widgets/identity/profile/preferences_section.dart';
 import '../../widgets/identity/profile/profile_header.dart';
 import '../../widgets/identity/profile/security_section.dart';
+import '../../widgets/notifications/preferences/notification_preferences_section.dart';
 
 /// The signed-in person's own account, where they belong, and their preferences.
 class ProfileScreen extends StatelessWidget {
@@ -24,6 +25,8 @@ class ProfileScreen extends StatelessWidget {
         PlacesSection(),
         SizedBox(height: AppSpacing.medium),
         PreferencesSection(),
+        SizedBox(height: AppSpacing.medium),
+        NotificationPreferencesSection(),
         SizedBox(height: AppSpacing.medium),
         SecuritySection(),
       ],

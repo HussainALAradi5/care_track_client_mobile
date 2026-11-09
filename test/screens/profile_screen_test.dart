@@ -51,7 +51,9 @@ void main() {
     await pumpScreen(
       tester,
       const ProfileScreen(),
-      (_) => const Failure(500, 'BOOM'),
+      (r) => r.path == '/patients/me/hospitals'
+          ? const Failure(500, 'BOOM')
+          : {'types': const [], 'quietHoursStart': null, 'quietHoursEnd': null},
       overrides: [authControllerProvider.overrideWith(() => FixedAuth(patient))],
     );
     expect(find.text('Try again'), findsOneWidget);

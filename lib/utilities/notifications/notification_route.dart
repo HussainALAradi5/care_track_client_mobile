@@ -1,7 +1,7 @@
 import '../../constants/route_paths.dart';
 import '../../enums/notifications/notification_link_type.dart';
 
-/// The screen a notification opens; leave and payslips have no mobile screen yet, so those only mark as read.
+/// The screen a notification opens.
 String? notificationRoute(NotificationLinkType type, {required bool staff, String? linkId}) => switch (type) {
   NotificationLinkType.booking => staff ? RoutePaths.staffQueue : RoutePaths.requests,
   NotificationLinkType.appointment ||
@@ -9,6 +9,7 @@ String? notificationRoute(NotificationLinkType type, {required bool staff, Strin
   NotificationLinkType.payment ||
   NotificationLinkType.refund => staff ? RoutePaths.staffVisits : RoutePaths.visits,
   NotificationLinkType.staffRequest => RoutePaths.staffRequests,
-  NotificationLinkType.leaveRequest || NotificationLinkType.payslips => null,
+  NotificationLinkType.leaveRequest => RoutePaths.staffLeave,
+  NotificationLinkType.payslips => RoutePaths.staffPayslips,
   NotificationLinkType.chatConversation => linkId == null ? RoutePaths.chat : RoutePaths.chatThread(linkId),
 };
