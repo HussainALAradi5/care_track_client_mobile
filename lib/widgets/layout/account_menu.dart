@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/motion.dart';
 import '../../constants/texts/common_texts.dart';
+import '../../constants/texts/picker_texts.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/ui/theme_controller.dart';
 import '../../utilities/text/initials.dart';
+import '../common/pickers/picker_style_sheet.dart';
 
 /// Theme toggle and an avatar menu with the person's name and sign-out.
 class AccountMenu extends ConsumerWidget {
@@ -35,6 +37,10 @@ class AccountMenu extends ConsumerWidget {
           offset: const Offset(0, 48),
           itemBuilder: (_) => [
             PopupMenuItem<void>(enabled: false, child: Text(user?.name ?? '')),
+            PopupMenuItem<void>(
+              onTap: () => showPickerStyleSheet(context),
+              child: const ListTile(leading: Icon(Icons.event_rounded), title: Text(PickerTexts.pickerStyle)),
+            ),
             PopupMenuItem<void>(
               onTap: () => ref.read(authControllerProvider.notifier).signOut(),
               child: const ListTile(leading: Icon(Icons.logout_rounded), title: Text(CommonTexts.signOut)),

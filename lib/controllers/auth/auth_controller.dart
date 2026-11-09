@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../enums/ui/picker_style.dart';
 import '../../models/identity/session_user.dart';
 import '../core/service_providers.dart';
 
@@ -25,6 +26,11 @@ class AuthController extends AsyncNotifier<SessionUser?> {
   Future<void> signOut() async {
     await ref.read(authServiceProvider).signOut();
     state = const AsyncData(null);
+  }
+
+  /// Saves the person's own picker look and shows it at once; a failed save throws and changes nothing.
+  Future<void> setPickerStyle(PickerStyle? style) async {
+    state = AsyncData(await ref.read(sessionServiceProvider).setPickerStyle(style));
   }
 
   /// A token without a linked CareTrack account (or a rejected one) counts as signed out.

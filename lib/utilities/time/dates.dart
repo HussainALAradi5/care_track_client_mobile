@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart' show TimeOfDay;
 import 'package:intl/intl.dart';
 
 DateTime startOfDay(DateTime date) => DateTime(date.year, date.month, date.day);
@@ -14,3 +15,7 @@ String shortDateTime(DateTime value) => DateFormat('d MMM, HH:mm').format(value)
 
 /// 'Thu, 5 Nov 2026' in the device's locale (a picked day in a form).
 String longDate(DateTime value) => DateFormat('EEE, d MMM y').format(value);
+
+/// '08:30': a time of day, always 24-hour.
+String hourMinute(TimeOfDay time) =>
+    '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';

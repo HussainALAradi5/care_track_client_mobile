@@ -3,6 +3,7 @@ class Endpoints {
   const Endpoints._();
 
   static const me = '/auth/me';
+  static const myPickerStyle = '/auth/me/picker-style';
   static const myStaffHospitals = '/auth/me/hospitals';
   static const myOrganizations = '/auth/me/organizations';
   static const myHospitals = '/patients/me/hospitals';

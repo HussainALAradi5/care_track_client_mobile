@@ -50,6 +50,11 @@ class ApiClient {
     return response.data!;
   }
 
+  Future<Map<String, dynamic>> put(String path, {Object? body}) async {
+    final response = await _dio.put<Map<String, dynamic>>(path, data: body);
+    return response.data!;
+  }
+
   /// For routes that answer 204 No Content.
   Future<void> delete(String path) => _dio.delete<void>(path);
 }
