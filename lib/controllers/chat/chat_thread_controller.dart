@@ -19,6 +19,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
   final String conversationId;
   KeepAliveLink? _hold;
   bool _onScreen = true;
+  bool _loadingOlder = false;
 
   /// Whether someone is looking at this thread; it can stay alive without that while a send settles.
   bool get isOnScreen => _onScreen;
@@ -84,13 +85,21 @@ class ChatThreadController extends Notifier<ChatThreadState> {
 
   Future<void> loadOlder() async {
     final before = state.nextBefore;
-    if (before == null || !state.hasOlder) return;
-    final page = await ref.read(chatServiceProvider).messages(conversationId, before: before);
-    state = state.copyWith(
-      messages: _merge(state.messages, page.items),
-      hasOlder: page.hasMore,
-      nextBefore: () => page.nextBefore,
-    );
+    if (_loadingOlder || before == null || !state.hasOlder) return;
+    _loadingOlder = true;
+    try {
+      final page = await ref.read(chatServiceProvider).messages(conversationId, before: before);
+      if (!ref.mounted) return;
+      state = state.copyWith(
+        messages: _merge(state.messages, page.items),
+        hasOlder: page.hasMore,
+        nextBefore: () => page.nextBefore,
+      );
+    } catch (_) {
+      // Nothing changes on screen and the button stays, so the same page can be tried again.
+    } finally {
+      _loadingOlder = false;
+    }
   }
 
   void setReplyTo(ChatMessage? message) => state = state.copyWith(replyTo: () => message);

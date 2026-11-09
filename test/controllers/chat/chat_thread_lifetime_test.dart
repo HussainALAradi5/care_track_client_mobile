@@ -78,9 +78,11 @@ void main() {
     final c = h.container;
     final sub = c.listen(thread, (_, _) {});
     await eventually(() => expect(c.read(thread).messages, isNotEmpty));
+    int reads() => h.server.requests.where((r) => r.path.endsWith('/read')).length;
+    await eventually(() => expect(reads(), greaterThan(0)));
     final notifier = c.read(thread.notifier);
     final sending = notifier.send('hello');
-    final readsBefore = h.server.requests.where((r) => r.path.endsWith('/read')).length;
+    final readsBefore = reads();
 
     sub.close();
     await c.pump();
@@ -88,7 +90,7 @@ void main() {
     notifier.applyNew(ChatMessage.fromJson(messageJson(5)));
     await Future<void>.delayed(const Duration(milliseconds: 30));
 
-    expect(h.server.requests.where((r) => r.path.endsWith('/read')).length, readsBefore);
+    expect(reads(), readsBefore);
     release.complete();
     await sending;
   });
