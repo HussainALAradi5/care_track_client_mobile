@@ -38,14 +38,14 @@ void main() {
     final h = await chatHarness(responses);
     addTearDown(h.container.dispose);
     final c = h.container;
-    expect((await c.read(chatConversationsProvider.future)).length, 1);
+    expect((await c.read(chatConversationsProvider.future)).items.length, 1);
     expect((await c.read(notificationInboxProvider.future)).items.length, 1);
     expect(await c.read(unreadCountProvider.future), 7);
     expect(c.read(chatUnreadTotalProvider), 2);
 
     (c.read(authControllerProvider.notifier) as SwitchableAuth).become(null);
 
-    expect(await c.read(chatConversationsProvider.future), isEmpty);
+    expect((await c.read(chatConversationsProvider.future)).items, isEmpty);
     expect((await c.read(notificationInboxProvider.future)).items, isEmpty);
     expect(await c.read(unreadCountProvider.future), 0);
     expect(c.read(chatUnreadTotalProvider), 0);

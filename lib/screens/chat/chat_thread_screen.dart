@@ -21,7 +21,7 @@ class ChatThreadScreen extends ConsumerWidget {
     ref.watch(chatLiveProvider);
     final thread = ref.watch(chatThreadProvider(conversationId));
     final controller = ref.read(chatThreadProvider(conversationId).notifier);
-    final conversations = ref.watch(chatConversationsProvider).value ?? const <Conversation>[];
+    final conversations = ref.watch(chatConversationsProvider).value?.items ?? const <Conversation>[];
     final conversation = conversations.where((c) => c.id == conversationId).firstOrNull;
     return Scaffold(
       appBar: AppBar(title: Text(conversation?.title ?? ChatTexts.title)),

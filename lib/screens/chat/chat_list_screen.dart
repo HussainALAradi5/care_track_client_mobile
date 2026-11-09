@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../constants/route_paths.dart';
 import '../../constants/texts/chat_texts.dart';
+import '../../constants/texts/common_texts.dart';
 import '../../controllers/chat/chat_conversations_controller.dart';
 import '../../controllers/chat/chat_live_controller.dart';
 import '../../models/chat/conversation.dart';
+import '../../models/common/paged_items.dart';
 import '../../widgets/chat/conversation_tile.dart';
 import '../../widgets/common/feedback/async_body.dart';
 import '../../widgets/common/feedback/empty_state.dart';
@@ -23,10 +25,10 @@ class ChatListScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text(ChatTexts.title)),
       body: RefreshIndicator(
         onRefresh: controller.refresh,
-        child: AsyncBody<List<Conversation>>(
+        child: AsyncBody<PagedItems<Conversation>>(
           value: ref.watch(chatConversationsProvider),
           onRetry: controller.refresh,
-          data: (conversations) => conversations.isEmpty
+          data: (paged) => paged.items.isEmpty
               ? ListView(
                   children: const [
                     EmptyState(icon: Icons.forum_outlined, title: ChatTexts.empty, hint: ChatTexts.emptyHint),
@@ -34,11 +36,16 @@ class ChatListScreen extends ConsumerWidget {
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(12),
-                  itemCount: conversations.length,
-                  itemBuilder: (_, index) => ConversationTile(
-                    conversation: conversations[index],
-                    onTap: () => context.push(RoutePaths.chatThread(conversations[index].id)),
-                  ),
+                  itemCount: paged.items.length + (paged.hasNext ? 1 : 0),
+                  itemBuilder: (_, index) => index == paged.items.length
+                      ? TextButton(
+                          onPressed: paged.loadingMore ? null : controller.loadMore,
+                          child: const Text(CommonTexts.loadMore),
+                        )
+                      : ConversationTile(
+                          conversation: paged.items[index],
+                          onTap: () => context.push(RoutePaths.chatThread(paged.items[index].id)),
+                        ),
                 ),
         ),
       ),
