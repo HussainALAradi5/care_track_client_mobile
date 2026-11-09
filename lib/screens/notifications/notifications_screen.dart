@@ -55,7 +55,7 @@ class NotificationsScreen extends ConsumerWidget {
   }
 
   Future<void> _open(BuildContext context, WidgetRef ref, AppNotification notification) async {
-    final path = notificationRoute(notification.linkType, staff: ref.read(authControllerProvider).value?.userType.isStaff ?? false);
+    final path = notificationRoute(notification.linkType, staff: ref.read(authControllerProvider).value?.userType.isStaff ?? false, linkId: notification.linkId);
     await ref.read(notificationInboxProvider.notifier).markRead(notification);
     if (path != null && context.mounted) context.go(path);
   }

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../constants/staff_nav.dart';
 import '../../controllers/identity/staff_context_controller.dart';
+import '../chat/chat_button.dart';
 import '../notifications/notification_bell.dart';
 import 'account_menu.dart';
 import 'staff_hospital_switcher.dart';
@@ -25,7 +26,7 @@ class StaffShell extends ConsumerWidget {
     ];
     final selected = items.indexWhere((item) => location.startsWith(item.path));
     return Scaffold(
-      appBar: AppBar(title: const StaffHospitalSwitcher(), actions: const [NotificationBell(), AccountMenu()]),
+      appBar: AppBar(title: const StaffHospitalSwitcher(), actions: const [ChatButton(), NotificationBell(), AccountMenu()]),
       body: child,
       bottomNavigationBar: items.length < 2
           ? null

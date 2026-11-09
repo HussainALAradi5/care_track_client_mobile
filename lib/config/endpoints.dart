@@ -4,6 +4,11 @@ class Endpoints {
 
   static const me = '/auth/me';
   static const myPickerStyle = '/auth/me/picker-style';
+  static const chatConversations = '/chat/conversations';
+  static String chatConversation(String id) => '/chat/conversations/$id';
+  static String chatMessages(String id) => '/chat/conversations/$id/messages';
+  static String chatRead(String id) => '/chat/conversations/$id/read';
+  static String chatDelivered(String id) => '/chat/conversations/$id/delivered';
   static const notifications = '/notifications';
   static const notificationsUnreadCount = '/notifications/unread-count';
   static const notificationsReadAll = '/notifications/read-all';

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../constants/texts/common_texts.dart';
 import '../../constants/texts/document_texts.dart';
+import '../chat/chat_button.dart';
 import '../notifications/notification_bell.dart';
 import 'account_menu.dart';
 import 'hospital_switcher.dart';
@@ -16,7 +17,7 @@ class PatientShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const HospitalSwitcher(), actions: const [NotificationBell(), AccountMenu()]),
+      appBar: AppBar(title: const HospitalSwitcher(), actions: const [ChatButton(), NotificationBell(), AccountMenu()]),
       body: shell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,

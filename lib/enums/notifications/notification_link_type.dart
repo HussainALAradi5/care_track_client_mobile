@@ -7,7 +7,8 @@ enum NotificationLinkType {
   refund('REFUND'),
   leaveRequest('LEAVE_REQUEST'),
   staffRequest('STAFF_REQUEST'),
-  payslips('PAYSLIPS');
+  payslips('PAYSLIPS'),
+  chatConversation('CHAT_CONVERSATION');
 
   const NotificationLinkType(this.wire);
   final String wire;

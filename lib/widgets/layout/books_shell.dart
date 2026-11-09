@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../constants/books_nav.dart';
 import '../../controllers/identity/organization_context_controller.dart';
+import '../chat/chat_button.dart';
 import '../notifications/notification_bell.dart';
 import 'account_menu.dart';
 import 'hospital_menu.dart';
@@ -33,7 +34,7 @@ class BooksShell extends ConsumerWidget {
           options: {for (final o in context_?.organizations ?? const []) o.organizationId: o.name},
           onSelect: (id) => ref.read(organizationContextProvider.notifier).select(id),
         ),
-        actions: const [NotificationBell(), AccountMenu()],
+        actions: const [ChatButton(), NotificationBell(), AccountMenu()],
       ),
       body: child,
       bottomNavigationBar: items.length < 2

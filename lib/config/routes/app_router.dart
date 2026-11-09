@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../constants/route_paths.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../screens/notifications/notifications_screen.dart';
+import '../../screens/chat/chat_list_screen.dart';
+import '../../screens/chat/chat_thread_screen.dart';
 import '../../screens/accounting/books_screen.dart';
 import '../../screens/accounting/journal_screen.dart';
 import '../../screens/accounting/reports_screen.dart';
@@ -41,7 +43,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final user = auth.value;
       if (user == null) return at == RoutePaths.signIn ? null : RoutePaths.signIn;
       // The inbox opens over any side of the app.
-      if (at == RoutePaths.notifications) return null;
+      if (at == RoutePaths.notifications || at.startsWith(RoutePaths.chat)) return null;
       final onBooksRoute = at.startsWith(RoutePaths.books);
       if (user.userType.isAccountant) return onBooksRoute ? null : RoutePaths.books;
       final staff = user.userType.isStaff;
@@ -56,6 +58,11 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: RoutePaths.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(path: RoutePaths.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, _) => const NotificationsScreen()),
+      GoRoute(path: RoutePaths.chat, builder: (_, _) => const ChatListScreen()),
+      GoRoute(
+        path: '${RoutePaths.chat}/:conversationId',
+        builder: (_, state) => ChatThreadScreen(conversationId: state.pathParameters['conversationId']!),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => PatientShell(shell: shell),
         branches: [

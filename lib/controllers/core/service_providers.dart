@@ -18,6 +18,7 @@ import '../../services/identity/staff_organization_service.dart';
 import '../../services/workforce/shift_service.dart';
 import '../../services/workforce/staff_request_service.dart';
 import '../../services/notifications/notification_service.dart';
+import '../../services/chat/chat_service.dart';
 import '../../services/realtime/stomp_realtime_channel.dart';
 import '../../config/app_config.dart';
 import '../../interfaces/realtime/realtime_channel.dart';
@@ -42,6 +43,7 @@ final staffHospitalServiceProvider = Provider((ref) => StaffHospitalService(ref.
 final shiftServiceProvider = Provider((ref) => ShiftService(ref.watch(apiClientProvider)));
 final staffRequestServiceProvider = Provider((ref) => StaffRequestService(ref.watch(apiClientProvider)));
 final notificationServiceProvider = Provider((ref) => NotificationService(ref.watch(apiClientProvider)));
+final chatServiceProvider = Provider((ref) => ChatService(ref.watch(apiClientProvider)));
 
 final realtimeChannelProvider = Provider<RealtimeChannel>(
   (ref) => StompRealtimeChannel(ref.watch(authServiceProvider), AppConfig.realtimeUrl),
