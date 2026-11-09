@@ -8,6 +8,7 @@ import '../../models/chat/outgoing_message.dart';
 import '../../utilities/chat/client_key.dart';
 import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
+import '../ui/app_foreground_controller.dart';
 import 'chat_conversations_controller.dart';
 
 /// One open thread: pages of messages, optimistic sending with retry, replies, and the frames that reach it live.
@@ -19,6 +20,9 @@ class ChatThreadController extends Notifier<ChatThreadState> {
   @override
   ChatThreadState build() {
     if (ref.watch(signedInUserIdProvider) == null) return const ChatThreadState(loading: false);
+    ref.listen(appForegroundProvider, (_, foreground) {
+      if (foreground) _reportSeen();
+    });
     final open = ref.read(openChatThreadsProvider)..add(conversationId);
     ref.onDispose(() => open.remove(conversationId));
     Future.microtask(load);
@@ -126,9 +130,9 @@ class ChatThreadController extends Notifier<ChatThreadState> {
     state = state.copyWith(messages: [for (final m in state.messages) m.id == messageId ? m.asDeleted() : m]);
   }
 
-  /// The thread is open and reaching the screen: the newest message counts as read.
+  /// The thread is open and the app is on screen: the newest message counts as read, and only then.
   void _reportSeen() {
-    if (state.messages.isEmpty) return;
+    if (state.messages.isEmpty || !ref.read(appForegroundProvider)) return;
     final newest = state.messages.last.sequence;
     ref.read(chatConversationsProvider.notifier).markRead(conversationId, newest);
     ref.read(chatServiceProvider).markRead(conversationId, newest).catchError((_) {});
