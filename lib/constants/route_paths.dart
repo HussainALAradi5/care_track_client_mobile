@@ -9,6 +9,8 @@ class RoutePaths {
   static const visits = '/visits';
   static const documents = '/documents';
   static const notifications = '/notifications';
+  static const chat = '/chat';
+  static String chatThread(String id) => '/chat/$id';
 
   static const staff = '/staff';
   static const staffQueue = '/staff/queue';

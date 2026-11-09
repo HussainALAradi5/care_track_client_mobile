@@ -39,5 +39,6 @@ class NotificationTile extends StatelessWidget {
     NotificationLinkType.leaveRequest => Icons.beach_access_outlined,
     NotificationLinkType.staffRequest => Icons.assignment_outlined,
     NotificationLinkType.payslips => Icons.receipt_long_outlined,
+    NotificationLinkType.chatConversation => Icons.forum_outlined,
   };
 }
