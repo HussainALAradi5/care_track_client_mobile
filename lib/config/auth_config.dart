@@ -13,4 +13,7 @@ class AuthConfig {
 
   /// Refresh this long before the access token expires.
   static const refreshMargin = Duration(seconds: 30);
+
+  /// The OAuth error for a refresh token that is expired or revoked.
+  static const invalidGrantError = 'invalid_grant';
 }

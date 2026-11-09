@@ -47,6 +47,9 @@ class FakeServer implements HttpClientAdapter {
 
 class FakeTokens implements TokenSource {
   @override
+  bool get signedIn => true;
+
+  @override
   Future<String?> validAccessToken() async => 'token';
 
   @override
