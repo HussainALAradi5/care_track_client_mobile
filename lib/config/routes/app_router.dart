@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../constants/route_paths.dart';
 import '../../controllers/auth/auth_controller.dart';
+import '../../controllers/auth/pending_sign_up_controller.dart';
 import '../../screens/notifications/notifications_screen.dart';
 import '../../screens/chat/chat_list_screen.dart';
 import '../../screens/chat/chat_thread_screen.dart';
@@ -10,6 +11,7 @@ import '../../screens/accounting/books_screen.dart';
 import '../../screens/accounting/journal_screen.dart';
 import '../../screens/accounting/reports_screen.dart';
 import '../../screens/auth/sign_in_screen.dart';
+import '../../screens/auth/sign_up_screen.dart';
 import '../../screens/auth/splash_screen.dart';
 import '../../screens/patient/appointments_screen.dart';
 import '../../screens/patient/book_screen.dart';
@@ -27,7 +29,8 @@ import '../../widgets/layout/patient_shell.dart';
 import '../../widgets/layout/staff_shell.dart';
 import 'router_refresh.dart';
 
-/// Signed-out people only see sign-in; signed-in people never see it. Patients get the patient tabs (each with its
+/// Signed-out people only see sign-in, or the Finish signing up form when their sign-in has no account yet;
+/// signed-in people never see either. Patients get the patient tabs (each with its
 /// own stack), accountants the books screens, and every other account type the staff screens. Each screen checks
 /// its own permission.
 final appRouterProvider = Provider<GoRouter>((ref) {
@@ -41,7 +44,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final at = state.matchedLocation;
       if (auth.isLoading && !auth.hasValue) return RoutePaths.splash;
       final user = auth.value;
-      if (user == null) return at == RoutePaths.signIn ? null : RoutePaths.signIn;
+      if (user == null) {
+        final allowed = ref.read(pendingSignUpProvider) ? RoutePaths.signUp : RoutePaths.signIn;
+        return at == allowed ? null : allowed;
+      }
       // The inbox opens over any side of the app.
       if (at == RoutePaths.notifications || at.startsWith(RoutePaths.chat)) return null;
       final onBooksRoute = at.startsWith(RoutePaths.books);
@@ -49,7 +55,12 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final staff = user.userType.isStaff;
       final onStaffRoute = at.startsWith(RoutePaths.staff);
       if (staff && !onStaffRoute) return RoutePaths.staff;
-      if (!staff && (onStaffRoute || onBooksRoute || at == RoutePaths.signIn || at == RoutePaths.splash)) {
+      if (!staff &&
+          (onStaffRoute ||
+              onBooksRoute ||
+              at == RoutePaths.signIn ||
+              at == RoutePaths.signUp ||
+              at == RoutePaths.splash)) {
         return RoutePaths.home;
       }
       return null;
@@ -57,6 +68,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: RoutePaths.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(path: RoutePaths.signIn, builder: (_, _) => const SignInScreen()),
+      GoRoute(path: RoutePaths.signUp, builder: (_, _) => const SignUpScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, _) => const NotificationsScreen()),
       GoRoute(path: RoutePaths.chat, builder: (_, _) => const ChatListScreen()),
       GoRoute(

@@ -5,6 +5,7 @@ class AppConstants {
   static const appName = 'CareTrack';
   static const tagline = 'Your care, one calm timeline.';
   static const pageSize = 20;
+  static const searchPageSize = 20;
   static const maxEnrollments = 50;
   static const maxCareTeam = 50;
   static const maxStaffHospitals = 50;

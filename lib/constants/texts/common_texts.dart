@@ -47,7 +47,10 @@ class CommonTexts {
     'SHIFT_STARTED': 'This shift has already started, so it stays on record.',
     'SHIFT_IN_USE': 'Visits or room cover are booked in this shift. Move or cancel them first.',
     'CLINICIAN_NOT_FOUND': 'This person is not an active doctor or nurse.',
-    'SIGN_UP_REQUIRED':
-        'This sign-in has no CareTrack account yet. Finish signing up on the CareTrack website, then sign in here.',
+    'SIGN_UP_REQUIRED': 'This sign-in has no CareTrack account yet. Finish signing up to use the app.',
+    'SIGN_UP_ALREADY_DONE': 'This sign-in already has a CareTrack account.',
+    'INVITATION_EMAIL_UNVERIFIED': 'Verify your email from your inbox, then sign in again.',
+    'RESIDENCE_CITY_INVALID': 'Choose a city in the country you live in.',
+    'HOSPITAL_NOT_FOUND': 'This hospital is no longer available. Please choose another.',
   };
 }

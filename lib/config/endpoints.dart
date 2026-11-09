@@ -4,6 +4,17 @@ class Endpoints {
 
   static const me = '/auth/me';
   static const myPickerStyle = '/auth/me/picker-style';
+  static const signUp = '/auth/sign-up';
+  static const linkInvitation = '/auth/link-invitation';
+
+  // Public catalog (no sign-in needed)
+  static const publicCountries = '/public/countries';
+  static String publicCities(String countryId) => '/public/countries/$countryId/cities';
+  static const publicAllCountries = '/public/places/countries';
+  static String publicAllCities(String countryId) => '/public/places/countries/$countryId/cities';
+  static const publicHospitals = '/public/hospitals';
+  static const hospitalsNearMe = '/hospitals/matching-my-residence';
+
   static const chatConversations = '/chat/conversations';
   static String chatConversation(String id) => '/chat/conversations/$id';
   static String chatMessages(String id) => '/chat/conversations/$id/messages';

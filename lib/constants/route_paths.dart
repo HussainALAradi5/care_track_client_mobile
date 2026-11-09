@@ -3,6 +3,7 @@ class RoutePaths {
 
   static const splash = '/splash';
   static const signIn = '/sign-in';
+  static const signUp = '/sign-up';
   static const home = '/home';
   static const book = '/book';
   static const requests = '/requests';

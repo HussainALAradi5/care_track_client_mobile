@@ -4,6 +4,8 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/accounting/accounting_service.dart';
+import '../../services/facilities/public_catalog_service.dart';
+import '../../services/identity/sign_up_service.dart';
 import '../../services/api/api_client.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/auth/token_storage.dart';
@@ -35,6 +37,8 @@ final authServiceProvider = Provider<AuthService>(
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient(ref.watch(authServiceProvider)));
 
 final sessionServiceProvider = Provider((ref) => SessionService(ref.watch(apiClientProvider)));
+final signUpServiceProvider = Provider((ref) => SignUpService(ref.watch(apiClientProvider)));
+final publicCatalogServiceProvider = Provider((ref) => PublicCatalogService(ref.watch(apiClientProvider)));
 final enrollmentServiceProvider = Provider((ref) => EnrollmentService(ref.watch(apiClientProvider)));
 final careTeamServiceProvider = Provider((ref) => CareTeamService(ref.watch(apiClientProvider)));
 final bookingServiceProvider = Provider((ref) => BookingService(ref.watch(apiClientProvider)));

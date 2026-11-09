@@ -31,6 +31,9 @@ class FailingSession implements SessionService {
   Future<SessionUser> me() => throw error;
 
   @override
+  Future<SessionUser> linkInvitation() => throw error;
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 

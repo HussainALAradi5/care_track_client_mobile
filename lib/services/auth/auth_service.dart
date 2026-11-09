@@ -6,6 +6,7 @@ import '../../config/app_config.dart';
 import '../../config/auth_config.dart';
 import '../../dtos/auth/auth_tokens.dart';
 import '../../interfaces/auth/token_source.dart';
+import '../../utilities/auth/jwt_claims.dart';
 import 'token_storage.dart';
 
 /// Sign-in through the external identity provider (authorization code + PKCE in the system browser).
@@ -30,8 +31,15 @@ class AuthService implements TokenSource {
     return _tokens != null;
   }
 
-  /// False when the person closed the browser without signing in (not an error).
-  Future<bool> signIn() async {
+  /// The email the identity provider holds for this sign-in (ID token claim).
+  String? get email {
+    final idToken = _tokens?.idToken;
+    return idToken == null ? null : jwtClaimsOf(idToken)['email'] as String?;
+  }
+
+  /// False when the person closed the browser without signing in (not an error). [register] opens the provider's
+  /// registration page instead of its sign-in page.
+  Future<bool> signIn({bool register = false}) async {
     try {
       final response = await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(
@@ -39,6 +47,7 @@ class AuthService implements TokenSource {
           AuthConfig.redirectUri,
           issuer: AuthConfig.issuer,
           scopes: AuthConfig.scopes,
+          promptValues: register ? const [AuthConfig.registerPrompt] : null,
           allowInsecureConnections: AppConfig.allowInsecureConnections,
         ),
       );

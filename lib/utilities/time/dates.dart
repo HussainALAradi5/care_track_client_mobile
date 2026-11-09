@@ -5,6 +5,9 @@ DateTime startOfDay(DateTime date) => DateTime(date.year, date.month, date.day);
 
 bool isSameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
+/// '2026-11-05': a calendar day as the server's LocalDate reads it.
+String isoDay(DateTime value) => DateFormat('yyyy-MM-dd').format(value);
+
 /// "Tue, 4 Nov · 09:30 – 10:00" in the device's locale and time zone.
 String visitTime(DateTime startsAt, DateTime endsAt) {
   final time = DateFormat.Hm();
