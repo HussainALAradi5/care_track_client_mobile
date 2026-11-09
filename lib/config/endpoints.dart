@@ -4,6 +4,10 @@ class Endpoints {
 
   static const me = '/auth/me';
   static const myPickerStyle = '/auth/me/picker-style';
+  static const notifications = '/notifications';
+  static const notificationsUnreadCount = '/notifications/unread-count';
+  static const notificationsReadAll = '/notifications/read-all';
+  static String notificationRead(String id) => '/notifications/$id/read';
   static const myStaffHospitals = '/auth/me/hospitals';
   static const myOrganizations = '/auth/me/organizations';
   static const myHospitals = '/patients/me/hospitals';

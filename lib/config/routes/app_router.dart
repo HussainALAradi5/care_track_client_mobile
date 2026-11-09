@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../constants/route_paths.dart';
 import '../../controllers/auth/auth_controller.dart';
+import '../../screens/notifications/notifications_screen.dart';
 import '../../screens/accounting/books_screen.dart';
 import '../../screens/accounting/journal_screen.dart';
 import '../../screens/accounting/reports_screen.dart';
@@ -39,6 +40,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       if (auth.isLoading && !auth.hasValue) return RoutePaths.splash;
       final user = auth.value;
       if (user == null) return at == RoutePaths.signIn ? null : RoutePaths.signIn;
+      // The inbox opens over any side of the app.
+      if (at == RoutePaths.notifications) return null;
       final onBooksRoute = at.startsWith(RoutePaths.books);
       if (user.userType.isAccountant) return onBooksRoute ? null : RoutePaths.books;
       final staff = user.userType.isStaff;
@@ -52,6 +55,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(path: RoutePaths.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(path: RoutePaths.signIn, builder: (_, _) => const SignInScreen()),
+      GoRoute(path: RoutePaths.notifications, builder: (_, _) => const NotificationsScreen()),
       StatefulShellRoute.indexedStack(
         builder: (_, _, shell) => PatientShell(shell: shell),
         branches: [
