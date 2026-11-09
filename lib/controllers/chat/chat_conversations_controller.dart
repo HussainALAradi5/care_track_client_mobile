@@ -5,12 +5,16 @@ import '../../dtos/common/page_request.dart';
 import '../../models/chat/chat_message.dart';
 import '../../models/chat/chat_receipt.dart';
 import '../../models/chat/conversation.dart';
+import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
 
 /// The member's conversations, newest activity first, kept current from the live channel.
 class ChatConversationsController extends AsyncNotifier<List<Conversation>> {
   @override
-  Future<List<Conversation>> build() => _fetch();
+  Future<List<Conversation>> build() {
+    if (ref.watch(signedInUserIdProvider) == null) return Future.value(const <Conversation>[]);
+    return _fetch();
+  }
 
   Future<void> refresh() async {
     ref.invalidateSelf();

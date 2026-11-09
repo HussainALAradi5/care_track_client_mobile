@@ -4,6 +4,7 @@ import '../../models/chat/chat_message.dart';
 import '../../models/chat/chat_thread_state.dart';
 import '../../models/chat/outgoing_message.dart';
 import '../../utilities/chat/client_key.dart';
+import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
 import 'chat_conversations_controller.dart';
 
@@ -15,6 +16,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
 
   @override
   ChatThreadState build() {
+    if (ref.watch(signedInUserIdProvider) == null) return const ChatThreadState(loading: false);
     Future.microtask(load);
     return const ChatThreadState();
   }

@@ -1,11 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
 
 /// The unread total behind the badge. The server's count wins; between reads it follows the changes made here.
 class UnreadCountController extends AsyncNotifier<int> {
   @override
-  Future<int> build() => ref.read(notificationServiceProvider).unreadCount();
+  Future<int> build() {
+    if (ref.watch(signedInUserIdProvider) == null) return Future.value(0);
+    return ref.read(notificationServiceProvider).unreadCount();
+  }
 
   Future<void> refresh() async {
     ref.invalidateSelf();

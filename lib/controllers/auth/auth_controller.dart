@@ -49,3 +49,8 @@ class AuthController extends AsyncNotifier<SessionUser?> {
 }
 
 final authControllerProvider = AsyncNotifierProvider<AuthController, SessionUser?>(AuthController.new);
+
+/// Who is signed in, or null; what one person's data hangs on, so it is rebuilt when someone else signs in.
+final signedInUserIdProvider = Provider<String?>(
+  (ref) => ref.watch(authControllerProvider.select((auth) => auth.value?.userId)),
+);
