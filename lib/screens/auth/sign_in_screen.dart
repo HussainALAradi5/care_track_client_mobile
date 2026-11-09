@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../constants/app_constants.dart';
+import '../../constants/route_paths.dart';
+import '../../constants/texts/care_mode_texts.dart';
 import '../../constants/texts/common_texts.dart';
+import '../../constants/texts/sign_up_texts.dart';
 import '../../controllers/auth/auth_controller.dart';
+import '../../enums/ui/button_variant.dart';
 import '../../widgets/common/brand/brand_mark.dart';
 import '../../widgets/common/brand/glow_blob.dart';
 import '../../widgets/common/buttons/app_button.dart';
@@ -51,6 +56,20 @@ class SignInScreen extends ConsumerWidget {
                             icon: Icons.login_rounded,
                             expand: true,
                             onPressed: () => ref.read(authControllerProvider.notifier).signIn(),
+                          ),
+                          const SizedBox(height: 8),
+                          AppButton(
+                            label: SignUpTexts.createAccount,
+                            icon: Icons.person_add_alt_1_rounded,
+                            variant: ButtonVariant.outlined,
+                            expand: true,
+                            onPressed: () => ref.read(authControllerProvider.notifier).register(),
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () => context.push(RoutePaths.find),
+                            icon: const Icon(Icons.travel_explore_rounded),
+                            label: const Text(CareModeTexts.findHospitals),
                           ),
                         ],
                       ),

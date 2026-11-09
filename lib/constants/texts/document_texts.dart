@@ -19,7 +19,14 @@ class DocumentTexts {
   static const noDocuments = 'No documents for this visit yet.';
   static const notArrived = 'Documents can be written once the patient has arrived.';
 
+  static const sickLeaveKind = 'SICK_LEAVE';
+  static String restLine(String from, String to) => 'Rest from $from to $to';
+  static const useForLeave = 'Use for my leave';
+  static const useForLeaveHint =
+      'Ask for sick leave where you work with this note attached. Your employer sees who issued it and the days, never its content.';
+
   static const kinds = {
+    'SICK_LEAVE': 'Sick leave',
     'MEDICAL_REPORT': 'Medical report',
     'ATTENDANCE_CERTIFICATE': 'Attendance certificate',
     'FITNESS_CERTIFICATE': 'Fitness certificate',

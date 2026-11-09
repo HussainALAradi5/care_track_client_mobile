@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../constants/texts/notification_texts.dart';
-import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/notifications/notification_inbox_controller.dart';
 import '../../controllers/notifications/notification_live_controller.dart';
+import '../../controllers/notifications/notification_opener.dart';
 import '../../controllers/notifications/unread_count_controller.dart';
 import '../../models/notifications/app_notification.dart';
-import '../../utilities/notifications/notification_route.dart';
 import '../../widgets/common/feedback/paged_list.dart';
 import '../../widgets/notifications/notification_tile.dart';
 
@@ -55,8 +54,7 @@ class NotificationsScreen extends ConsumerWidget {
   }
 
   Future<void> _open(BuildContext context, WidgetRef ref, AppNotification notification) async {
-    final path = notificationRoute(notification.linkType, staff: ref.read(authControllerProvider).value?.userType.isStaff ?? false, linkId: notification.linkId);
-    await ref.read(notificationInboxProvider.notifier).markRead(notification);
+    final path = await ref.read(notificationOpenerProvider).open(notification);
     if (path != null && context.mounted) context.go(path);
   }
 }

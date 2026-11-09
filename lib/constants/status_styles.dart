@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../enums/care/appointment_status.dart';
 import '../enums/care/booking_status.dart';
 import '../enums/ui/status_tone.dart';
+import '../enums/workforce/leave_status.dart';
 import '../enums/workforce/staff_request_status.dart';
 import '../models/ui/status_style.dart';
 
@@ -22,6 +23,13 @@ class StatusStyles {
     StaffRequestStatus.approved: StatusStyle(label: 'Approved', tone: StatusTone.success, icon: Icons.check_circle_rounded),
     StaffRequestStatus.rejected: StatusStyle(label: 'Rejected', tone: StatusTone.danger, icon: Icons.cancel_rounded),
     StaffRequestStatus.cancelled: StatusStyle(label: 'Cancelled', tone: StatusTone.neutral, icon: Icons.block_rounded),
+  };
+
+  static const leave = <LeaveStatus, StatusStyle>{
+    LeaveStatus.requested: StatusStyle(label: 'Waiting', tone: StatusTone.info, icon: Icons.hourglass_top_rounded),
+    LeaveStatus.approved: StatusStyle(label: 'Approved', tone: StatusTone.success, icon: Icons.check_circle_rounded),
+    LeaveStatus.rejected: StatusStyle(label: 'Rejected', tone: StatusTone.danger, icon: Icons.cancel_rounded),
+    LeaveStatus.cancelled: StatusStyle(label: 'Cancelled', tone: StatusTone.neutral, icon: Icons.block_rounded),
   };
 
   static const appointment = <AppointmentStatus, StatusStyle>{

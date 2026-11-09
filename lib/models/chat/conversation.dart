@@ -12,6 +12,7 @@ class Conversation {
     required this.lastReadSequence,
     required this.myUserId,
     required this.participants,
+    this.muted = false,
   });
 
   final String id;
@@ -22,6 +23,10 @@ class Conversation {
   final int lastReadSequence;
   final String myUserId;
   final List<ChatParticipant> participants;
+  final bool muted;
+
+  /// Whether anyone else in the conversation is online now.
+  bool get otherOnline => participants.any((p) => p.userId != myUserId && p.online);
 
   /// The other person's name, which is what the conversation is called for this member.
   String get title {
@@ -37,6 +42,7 @@ class Conversation {
     int? unreadCount,
     int? lastReadSequence,
     List<ChatParticipant>? participants,
+    bool? muted,
   }) => Conversation(
     id: id,
     kind: kind,
@@ -46,6 +52,7 @@ class Conversation {
     lastReadSequence: lastReadSequence ?? this.lastReadSequence,
     myUserId: myUserId,
     participants: participants ?? this.participants,
+    muted: muted ?? this.muted,
   );
 
   factory Conversation.fromJson(Map<String, dynamic> json) => Conversation(
@@ -59,5 +66,6 @@ class Conversation {
     participants: (json['participants'] as List<dynamic>)
         .map((p) => ChatParticipant.fromJson(p as Map<String, dynamic>))
         .toList(),
+    muted: json['muted'] as bool,
   );
 }

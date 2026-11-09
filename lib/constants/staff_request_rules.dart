@@ -3,4 +3,5 @@ class StaffRequestRules {
   const StaffRequestRules._();
 
   static const detailsMax = 1000;
+  static const noteMax = 500;
 }

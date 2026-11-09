@@ -11,6 +11,12 @@ class AuthConfig {
   static const issuer = AppConfig.authIssuer;
   static const clientId = AppConfig.authClientId;
 
+  /// OIDC `prompt` value that opens the registration page instead of sign-in.
+  static const registerPrompt = 'create';
+
+  /// The identity provider's own account page, where people change their password, email or phone number.
+  static const accountConsoleUrl = '$issuer/account';
+
   /// Refresh this long before the access token expires.
   static const refreshMargin = Duration(seconds: 30);
 

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 
 import '../../config/app_config.dart';
@@ -55,6 +57,25 @@ class ApiClient {
     return response.data!;
   }
 
+  /// For a POST that answers 204 No Content.
+  Future<void> postNoContent(String path, {Object? body}) => _dio.post<void>(path, data: body);
+
   /// For routes that answer 204 No Content.
   Future<void> delete(String path) => _dio.delete<void>(path);
+
+  /// A file as raw bytes.
+  Future<Uint8List> getBytes(String path) async {
+    final response = await _dio.get<List<int>>(path, options: Options(responseType: ResponseType.bytes));
+    return Uint8List.fromList(response.data!);
+  }
+
+  /// A multipart upload; [onProgress] gets bytes sent and total, as they go.
+  Future<Map<String, dynamic>> upload(
+    String path, {
+    required FormData form,
+    void Function(int sent, int total)? onProgress,
+  }) async {
+    final response = await _dio.post<Map<String, dynamic>>(path, data: form, onSendProgress: onProgress);
+    return response.data!;
+  }
 }

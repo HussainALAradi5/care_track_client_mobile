@@ -18,6 +18,8 @@ class StaffNavItem {
   final String path;
   final String? permission;
 
+  bool isAt(String location) => location == path || location.startsWith('$path/');
+
   bool isOpenAt(StaffHospital? hospital) =>
       hospital != null && (permission == null || hospital.can(permission!));
 }

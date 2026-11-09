@@ -5,8 +5,16 @@ class Realtime {
   static const notificationsQueue = '/user/queue/notifications';
   static const readStateQueue = '/user/queue/notification-read-state';
   static const chatQueue = '/user/queue/chat';
+  static const chatErrorsQueue = '/user/queue/chat-errors';
+  static const chatSend = '/app/chat/send';
+  static const chatEdit = '/app/chat/edit';
+  static const chatDelete = '/app/chat/delete';
+  static const chatReact = '/app/chat/react';
+  static const chatTyping = '/app/chat/typing';
   static const authorizationHeader = 'Authorization';
   static const bearerPrefix = 'Bearer ';
+  static const contentTypeHeader = 'content-type';
+  static const json = 'application/json';
   static const reconnectDelay = Duration(seconds: 5);
   static const heartbeat = Duration(seconds: 20);
 }

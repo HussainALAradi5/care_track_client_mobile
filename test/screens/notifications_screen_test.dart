@@ -20,6 +20,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class FakeServer implements HttpClientAdapter {
@@ -60,6 +61,9 @@ class FakeTokens implements TokenSource {
 }
 
 class FakeChannel implements RealtimeChannel {
+  @override
+  bool publish(String destination, Map<String, dynamic> body) => false;
+
   final controllers = <String, StreamController<Map<String, dynamic>>>{};
   final openedController = StreamController<void>.broadcast();
   bool connected = false;
@@ -129,11 +133,19 @@ Future<(FakeServer, FakeChannel)> pumpInbox(
         realtimeChannelProvider.overrideWithValue(channel),
         authControllerProvider.overrideWith(SignedIn.new),
       ],
-      child: MaterialApp(
+      child: MaterialApp.router(
         theme: AppTheme.light(),
-        home: const Scaffold(
+        routerConfig: GoRouter(
+          routes: [
+            GoRoute(
+              path: '/',
+              builder: (_, _) => const Scaffold(
           appBar: PreferredSize(preferredSize: Size.fromHeight(56), child: NotificationBell()),
           body: NotificationsScreen(),
+              ),
+            ),
+            GoRoute(path: RoutePaths.staffPayslips, builder: (_, _) => const Text('payslips')),
+          ],
         ),
       ),
     ),

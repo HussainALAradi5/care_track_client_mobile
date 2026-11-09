@@ -4,6 +4,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/accounting/accounting_service.dart';
+import '../../services/facilities/hospital_service.dart';
+import '../../services/facilities/public_catalog_service.dart';
+import '../../services/identity/sign_up_service.dart';
 import '../../services/api/api_client.dart';
 import '../../services/auth/auth_service.dart';
 import '../../services/auth/token_storage.dart';
@@ -15,10 +18,16 @@ import '../../services/identity/session_service.dart';
 import '../../services/documents/written_document_service.dart';
 import '../../services/identity/staff_hospital_service.dart';
 import '../../services/identity/staff_organization_service.dart';
+import '../../services/workforce/attendance_service.dart';
+import '../../services/workforce/leave_service.dart';
+import '../../services/workforce/payslip_service.dart';
+import '../../services/workforce/team_service.dart';
 import '../../services/workforce/shift_service.dart';
 import '../../services/workforce/staff_request_service.dart';
 import '../../services/notifications/notification_service.dart';
 import '../../services/chat/chat_service.dart';
+import '../../services/files/device_file_access.dart';
+import '../../interfaces/files/file_access.dart';
 import '../../services/realtime/stomp_realtime_channel.dart';
 import '../../config/app_config.dart';
 import '../../interfaces/realtime/realtime_channel.dart';
@@ -35,15 +44,23 @@ final authServiceProvider = Provider<AuthService>(
 final apiClientProvider = Provider<ApiClient>((ref) => ApiClient(ref.watch(authServiceProvider)));
 
 final sessionServiceProvider = Provider((ref) => SessionService(ref.watch(apiClientProvider)));
+final signUpServiceProvider = Provider((ref) => SignUpService(ref.watch(apiClientProvider)));
+final publicCatalogServiceProvider = Provider((ref) => PublicCatalogService(ref.watch(apiClientProvider)));
+final hospitalServiceProvider = Provider((ref) => HospitalService(ref.watch(apiClientProvider)));
 final enrollmentServiceProvider = Provider((ref) => EnrollmentService(ref.watch(apiClientProvider)));
 final careTeamServiceProvider = Provider((ref) => CareTeamService(ref.watch(apiClientProvider)));
 final bookingServiceProvider = Provider((ref) => BookingService(ref.watch(apiClientProvider)));
 final appointmentServiceProvider = Provider((ref) => AppointmentService(ref.watch(apiClientProvider)));
 final staffHospitalServiceProvider = Provider((ref) => StaffHospitalService(ref.watch(apiClientProvider)));
+final leaveServiceProvider = Provider((ref) => LeaveService(ref.watch(apiClientProvider)));
+final payslipServiceProvider = Provider((ref) => PayslipService(ref.watch(apiClientProvider)));
+final teamServiceProvider = Provider((ref) => TeamService(ref.watch(apiClientProvider)));
+final attendanceServiceProvider = Provider((ref) => AttendanceService(ref.watch(apiClientProvider)));
 final shiftServiceProvider = Provider((ref) => ShiftService(ref.watch(apiClientProvider)));
 final staffRequestServiceProvider = Provider((ref) => StaffRequestService(ref.watch(apiClientProvider)));
 final notificationServiceProvider = Provider((ref) => NotificationService(ref.watch(apiClientProvider)));
 final chatServiceProvider = Provider((ref) => ChatService(ref.watch(apiClientProvider)));
+final fileAccessProvider = Provider<FileAccess>((ref) => const DeviceFileAccess());
 
 final realtimeChannelProvider = Provider<RealtimeChannel>(
   (ref) => StompRealtimeChannel(ref.watch(authServiceProvider), AppConfig.realtimeUrl),

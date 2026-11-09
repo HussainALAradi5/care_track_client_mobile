@@ -5,6 +5,7 @@ class AppConstants {
   static const appName = 'CareTrack';
   static const tagline = 'Your care, one calm timeline.';
   static const pageSize = 20;
+  static const searchPageSize = 20;
   static const maxEnrollments = 50;
   static const maxCareTeam = 50;
   static const maxStaffHospitals = 50;
@@ -18,5 +19,6 @@ class AppConstants {
   static const hospitalKey = 'caretrack.hospital';
   static const staffHospitalKey = 'caretrack.staffHospital';
   static const staffOrganizationKey = 'caretrack.staffOrganization';
+  static const careModeKey = 'caretrack.careMode';
   static const tokenKey = 'caretrack.tokens';
 }

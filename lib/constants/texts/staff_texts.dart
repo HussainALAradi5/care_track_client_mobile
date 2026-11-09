@@ -7,6 +7,7 @@ class StaffTexts {
   static const navQueue = 'Queue';
   static const navDesk = 'Desk';
   static const navShifts = 'Shifts';
+  static const navMore = 'More';
 
   static const queueTitle = 'Booking queue';
   static const queueSubtitle = 'Requests waiting for a decision, oldest first.';

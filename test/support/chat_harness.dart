@@ -64,7 +64,24 @@ class FakeChannel implements RealtimeChannel {
       controllers.putIfAbsent(destination, StreamController<Map<String, dynamic>>.broadcast).stream;
 
   @override
+  bool publish(String destination, Map<String, dynamic> body) => false;
+
+  @override
   Stream<void> get opened => openedController.stream;
+}
+
+/// A channel that records what was published; [up] false means sending falls back to REST.
+class RecordingChannel extends FakeChannel {
+  RecordingChannel({this.up = false});
+
+  final bool up;
+  final published = <String, Map<String, dynamic>>{};
+
+  @override
+  bool publish(String destination, Map<String, dynamic> body) {
+    if (up) published[destination] = body;
+    return up;
+  }
 }
 
 /// Signs in as one person and can switch to another or to nobody.
@@ -83,9 +100,9 @@ class Harness {
   final FakeChannel channel;
 }
 
-Future<Harness> chatHarness(Respond respond, {List<Override> overrides = const []}) async {
+Future<Harness> chatHarness(Respond respond, {List<Override> overrides = const [], FakeChannel? liveChannel}) async {
   final server = FakeServer(respond);
-  final channel = FakeChannel();
+  final channel = liveChannel ?? FakeChannel();
   final dio = Dio(BaseOptions(baseUrl: 'http://test/api'))..httpClientAdapter = server;
   final container = ProviderContainer(
     retry: (_, _) => null,

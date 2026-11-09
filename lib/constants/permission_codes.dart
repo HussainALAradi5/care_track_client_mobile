@@ -8,6 +8,8 @@ class PermissionCodes {
   static const appointmentCheckIn = 'APPOINTMENT:CHECK_IN';
   static const appointmentNoShow = 'APPOINTMENT:NO_SHOW';
   static const shiftWrite = 'SHIFT:WRITE';
+  static const leaveReadAll = 'LEAVE:READ_ALL';
+  static const staffRequestHandle = 'STAFF_REQUEST:HANDLE';
   static const clinicalHistoryWrite = 'CLINICAL_HISTORY:WRITE';
   static const accountRead = 'ACCOUNT:READ';
   static const journalRead = 'JOURNAL:READ';

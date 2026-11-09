@@ -7,6 +7,7 @@ import '../../constants/texts/document_texts.dart';
 import '../../models/documents/written_document.dart';
 import '../common/feedback/async_body.dart';
 import 'document_body.dart';
+import 'sick_note_use.dart';
 
 /// Opens one document full height: kind, title, who issued it where and when, then the body.
 Future<void> showDocumentSheet(BuildContext context, ProviderListenable<AsyncValue<WrittenDocument>> document) =>
@@ -27,6 +28,8 @@ Future<void> showDocumentSheet(BuildContext context, ProviderListenable<AsyncVal
               padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
               children: [
                 _Header(document: doc),
+                if (doc.kind == DocumentTexts.sickLeaveKind && doc.restFrom != null && doc.restTo != null)
+                  SickNoteUse(document: doc),
                 const Divider(height: 32),
                 DocumentBody(html: doc.body),
               ],

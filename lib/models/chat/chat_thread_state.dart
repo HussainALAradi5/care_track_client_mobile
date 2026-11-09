@@ -1,7 +1,9 @@
 import 'chat_message.dart';
+import 'message_history.dart';
 import 'outgoing_message.dart';
 
-/// One open thread: its loaded messages (oldest first), what is still being sent, and the reply being written.
+/// One open thread: its loaded messages (oldest first), what is still being sent, the reply or edit being written, and
+/// the message whose earlier versions are open.
 class ChatThreadState {
   const ChatThreadState({
     this.messages = const [],
@@ -11,6 +13,8 @@ class ChatThreadState {
     this.hasOlder = false,
     this.nextBefore,
     this.replyTo,
+    this.editing,
+    this.history,
   });
 
   final List<ChatMessage> messages;
@@ -20,6 +24,8 @@ class ChatThreadState {
   final bool hasOlder;
   final int? nextBefore;
   final ChatMessage? replyTo;
+  final ChatMessage? editing;
+  final MessageHistory? history;
 
   ChatThreadState copyWith({
     List<ChatMessage>? messages,
@@ -29,6 +35,8 @@ class ChatThreadState {
     bool? hasOlder,
     int? Function()? nextBefore,
     ChatMessage? Function()? replyTo,
+    ChatMessage? Function()? editing,
+    MessageHistory? Function()? history,
   }) => ChatThreadState(
     messages: messages ?? this.messages,
     outgoing: outgoing ?? this.outgoing,
@@ -37,5 +45,7 @@ class ChatThreadState {
     hasOlder: hasOlder ?? this.hasOlder,
     nextBefore: nextBefore == null ? this.nextBefore : nextBefore(),
     replyTo: replyTo == null ? this.replyTo : replyTo(),
+    editing: editing == null ? this.editing : editing(),
+    history: history == null ? this.history : history(),
   );
 }

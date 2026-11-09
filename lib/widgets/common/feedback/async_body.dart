@@ -21,6 +21,8 @@ class AsyncBody<T> extends StatelessWidget {
       child: switch (value) {
         AsyncValue(:final value?, hasValue: true) => KeyedSubtree(key: const ValueKey('data'), child: data(value)),
         AsyncError(:final error) => ErrorState(key: const ValueKey('error'), error: error, onRetry: onRetry),
+        // Data that is legitimately null (nothing to show yet), not loading.
+        AsyncData(:final value) => KeyedSubtree(key: const ValueKey('data'), child: data(value)),
         _ => SkeletonList(key: const ValueKey('loading'), rows: skeletonRows),
       },
     );
