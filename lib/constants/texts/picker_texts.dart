@@ -6,8 +6,6 @@ class PickerTexts {
 
   static const done = 'Done';
   static const cancel = 'Cancel';
-  static const start = 'Start';
-  static const end = 'End';
   static const previousMonth = 'Previous month';
   static const nextMonth = 'Next month';
   static const pickerStyle = 'Picker style';
