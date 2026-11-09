@@ -4,10 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/permission_codes.dart';
 import '../../constants/texts/accounting_texts.dart';
 import '../../controllers/accounting/books_controller.dart';
-import '../../models/accounting/amount_line.dart';
 import '../../models/accounting/month_summary.dart';
-import '../../utilities/accounting/money_format.dart';
 import '../../widgets/accounting/money_tile.dart';
+import '../../widgets/accounting/top_accounts_list.dart';
 import '../../widgets/common/feedback/async_body.dart';
 import '../../widgets/common/feedback/empty_state.dart';
 import '../../widgets/common/progress/stat_tile.dart';
@@ -106,53 +105,11 @@ class _Summary extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 20),
-        _TopList(title: AccountingTexts.topRevenue, lines: s.topRevenue),
+        TopAccountsList(title: AccountingTexts.topRevenue, lines: s.topRevenue),
         const SizedBox(height: 12),
-        _TopList(title: AccountingTexts.topExpenses, lines: s.topExpenses),
+        TopAccountsList(title: AccountingTexts.topExpenses, lines: s.topExpenses),
       ],
     );
   }
 }
 
-class _TopList extends StatelessWidget {
-  const _TopList({required this.title, required this.lines});
-
-  final String title;
-  final List<AmountLine> lines;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card.outlined(
-      margin: EdgeInsets.zero,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(title, style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 6),
-            if (lines.isEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Text(AccountingTexts.nothingYet, style: theme.textTheme.bodySmall),
-              ),
-            for (final line in lines)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Row(
-                  children: [
-                    Expanded(child: Text(line.name, overflow: TextOverflow.ellipsis)),
-                    Text(
-                      formatMoney(line.amount),
-                      style: const TextStyle(fontFeatures: [FontFeature.tabularFigures()]),
-                    ),
-                  ],
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}

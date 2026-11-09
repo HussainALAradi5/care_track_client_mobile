@@ -21,6 +21,7 @@ class AuthService implements TokenSource {
 
   /// Fires when the session ends without the person signing out (refresh failed or 401).
   Stream<void> get expired => _expired.stream;
+  @override
   bool get signedIn => _tokens != null;
 
   Future<bool> restore() async {
@@ -104,8 +105,11 @@ class AuthService implements TokenSource {
         ),
       );
       return await _save(response, previous: current);
+    } on FlutterAppAuthPlatformException catch (error) {
+      // Only the provider saying the refresh token is finished ends the session; anything else can be tried again.
+      if (error.platformErrorDetails.error == AuthConfig.invalidGrantError) await handleUnauthorized();
+      return null;
     } catch (_) {
-      await handleUnauthorized();
       return null;
     }
   }

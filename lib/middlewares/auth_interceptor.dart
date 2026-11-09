@@ -17,7 +17,9 @@ class AuthInterceptor extends QueuedInterceptor {
 
   @override
   Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) await _tokens.handleUnauthorized();
+    // A 401 to a call that went out without a token says nothing about the session.
+    final sentToken = err.requestOptions.headers.containsKey('Authorization');
+    if (err.response?.statusCode == 401 && sentToken) await _tokens.handleUnauthorized();
     handler.next(err);
   }
 }

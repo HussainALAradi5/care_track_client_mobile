@@ -6,6 +6,7 @@ import '../../models/chat/chat_message.dart';
 import '../../models/chat/chat_receipt.dart';
 import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
+import '../ui/app_foreground_controller.dart';
 import 'chat_conversations_controller.dart';
 import 'chat_thread_controller.dart';
 
@@ -16,7 +17,13 @@ final chatLiveProvider = Provider<void>((ref) {
   if (!signedIn) return;
   final channel = ref.read(realtimeChannelProvider);
   final frames = channel.watch(Realtime.chatQueue).listen((frame) => _receive(ref, frame));
-  final reconnects = channel.opened.listen((_) => ref.invalidate(chatConversationsProvider));
+  final reconnects = channel.opened.listen((_) {
+    ref.invalidate(chatConversationsProvider);
+    for (final conversationId in ref.read(openChatThreadsProvider)) {
+      final thread = ref.read(chatThreadProvider(conversationId).notifier);
+      if (thread.isOnScreen) thread.reload();
+    }
+  });
   channel.connect();
   ref.onDispose(() {
     frames.cancel();
@@ -29,8 +36,9 @@ void _receive(Ref ref, Map<String, dynamic> frame) {
   final conversationId = frame['conversationId'] as String?;
   final data = frame['data'];
   if (type == null || conversationId == null || data is! Map<String, dynamic>) return;
-  final isOpen = ref.exists(chatThreadProvider(conversationId));
-  final thread = isOpen ? ref.read(chatThreadProvider(conversationId).notifier) : null;
+  final threadProvider = chatThreadProvider(conversationId);
+  final thread = ref.exists(threadProvider) ? ref.read(threadProvider.notifier) : null;
+  final isOpen = thread != null && thread.isOnScreen && ref.read(appForegroundProvider);
   final conversations = ref.read(chatConversationsProvider.notifier);
   switch (type) {
     case ChatEventType.messageNew:

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'smooth_date_sheet.dart';
-import 'smooth_range_sheet.dart';
 import 'wheel_time_sheet.dart';
 
 /// The Smooth look: CareTrack's animated calendar in a bottom sheet.
@@ -18,14 +17,3 @@ Future<DateTime?> showSmoothDate(
 
 Future<TimeOfDay?> showSmoothTime(BuildContext context, {required TimeOfDay initialTime}) =>
     showModalBottomSheet<TimeOfDay>(context: context, builder: (_) => WheelTimeSheet(initialTime: initialTime));
-
-Future<DateTimeRange?> showSmoothRange(
-  BuildContext context, {
-  required DateTime firstDate,
-  required DateTime lastDate,
-  DateTimeRange? initialRange,
-}) => showModalBottomSheet<DateTimeRange>(
-  context: context,
-  isScrollControlled: true,
-  builder: (_) => SmoothRangeSheet(firstDate: firstDate, lastDate: lastDate, initialRange: initialRange),
-);

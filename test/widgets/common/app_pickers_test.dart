@@ -40,8 +40,6 @@ Future<Object?> _date(BuildContext context) =>
 Future<Object?> _time(BuildContext context) =>
     AppPickers.time(context, initialTime: const TimeOfDay(hour: 8, minute: 0));
 
-Future<Object?> _range(BuildContext context) => AppPickers.dateRange(context, firstDate: _first, lastDate: _last);
-
 void main() {
   testWidgets('no choice on Android opens the Material calendar', (tester) async {
     await _open(tester, null, TargetPlatform.android, _date);
@@ -75,32 +73,5 @@ void main() {
     final wheels = tester.widget<CupertinoDatePicker>(find.byType(CupertinoDatePicker));
     expect(wheels.use24hFormat, isTrue);
     expect(wheels.mode, CupertinoDatePickerMode.time);
-  });
-
-  testWidgets('Smooth range closes on the second day and keeps its order', (tester) async {
-    late DateTimeRange? picked;
-    await _open(tester, PickerStyle.smooth, TargetPlatform.android, (context) async {
-      picked = await AppPickers.dateRange(context, firstDate: _first, lastDate: _last);
-      return picked;
-    });
-    await tester.tap(find.text('10').first);
-    await tester.pumpAndSettle();
-    expect(find.byType(SmoothCalendar), findsOneWidget);
-    await tester.tap(find.text('12').first);
-    await tester.pumpAndSettle();
-    expect(find.byType(SmoothCalendar), findsNothing);
-    expect(picked, DateTimeRange(start: DateTime(2026, 11, 10), end: DateTime(2026, 11, 12)));
-  });
-
-  testWidgets('iPhone range opens two-edged wheels', (tester) async {
-    await _open(tester, PickerStyle.iphone, TargetPlatform.android, _range);
-    expect(find.byType(CupertinoDatePicker), findsOneWidget);
-    expect(find.text('Start'), findsOneWidget);
-    expect(find.text('End'), findsOneWidget);
-  });
-
-  testWidgets('Android range opens the Material range picker', (tester) async {
-    await _open(tester, PickerStyle.android, TargetPlatform.iOS, _range);
-    expect(find.byType(DateRangePickerDialog), findsOneWidget);
   });
 }

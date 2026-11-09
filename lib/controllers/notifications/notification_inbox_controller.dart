@@ -5,13 +5,19 @@ import '../../dtos/common/page_request.dart';
 import '../../models/common/page_result.dart';
 import '../../models/common/paged_items.dart';
 import '../../models/notifications/app_notification.dart';
+import '../auth/auth_controller.dart';
 import '../core/service_providers.dart';
 import 'unread_count_controller.dart';
 
 /// The signed-in person's inbox, newest first: REST pages, plus live rows and read changes as they arrive.
 class NotificationInboxController extends AsyncNotifier<PagedItems<AppNotification>> {
   @override
-  Future<PagedItems<AppNotification>> build() async => _toItems(await _fetch(0), const []);
+  Future<PagedItems<AppNotification>> build() async {
+    if (ref.watch(signedInUserIdProvider) == null) {
+      return const PagedItems<AppNotification>(items: [], nextPage: 0, hasNext: false);
+    }
+    return _toItems(await _fetch(0), const []);
+  }
 
   Future<void> refresh() async {
     ref.invalidateSelf();

@@ -51,7 +51,9 @@ class StompRealtimeChannel implements RealtimeChannel {
   Future<void> _authorize() async {
     final token = await _tokens.validAccessToken();
     if (token == null) {
-      disconnect();
+      // Signed out ends the connection; otherwise this is a gap, and the next attempt asks for a token again.
+      _connectHeaders.remove(Realtime.authorizationHeader);
+      if (!_tokens.signedIn) disconnect();
       return;
     }
     _connectHeaders[Realtime.authorizationHeader] = '${Realtime.bearerPrefix}$token';

@@ -13,6 +13,7 @@ import 'package:care_track_client_mobile/models/identity/session_user.dart';
 import 'package:care_track_client_mobile/screens/chat/chat_list_screen.dart';
 import 'package:care_track_client_mobile/screens/chat/chat_thread_screen.dart';
 import 'package:care_track_client_mobile/services/api/api_client.dart';
+import 'package:care_track_client_mobile/widgets/chat/message_bubble.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +43,9 @@ class FakeServer implements HttpClientAdapter {
 }
 
 class FakeTokens implements TokenSource {
+  @override
+  bool get signedIn => true;
+
   @override
   Future<String?> validAccessToken() async => 'token';
 
@@ -163,6 +167,23 @@ void main() {
     await pump(tester, const ChatListScreen(), respond: (r) => chatResponses(r));
     expect(find.text('Dr Ali'), findsOneWidget);
     expect(find.text('2'), findsOneWidget);
+  });
+
+  testWidgets('builds only the messages on screen in a long thread', (tester) async {
+    await pump(
+      tester,
+      const ChatThreadScreen(conversationId: 'c1'),
+      respond: (r) => r.path.endsWith('/messages')
+          ? {
+              'items': [
+                for (var i = 1; i <= 100; i++) {...message(i), 'createdAt': '2026-11-09T09:00:00Z'},
+              ],
+              'hasMore': false,
+              'nextBefore': null,
+            }
+          : chatResponses(r),
+    );
+    expect(tester.widgetList(find.byType(MessageBubble)).length, lessThan(100));
   });
 
   testWidgets('shows messages, sends optimistically and confirms with the idempotency key', (tester) async {

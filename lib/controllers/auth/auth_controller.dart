@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../enums/ui/picker_style.dart';
@@ -37,11 +38,19 @@ class AuthController extends AsyncNotifier<SessionUser?> {
   Future<SessionUser?> _loadProfile() async {
     try {
       return await ref.read(sessionServiceProvider).me();
-    } catch (_) {
-      await ref.read(authServiceProvider).signOut();
+    } catch (error) {
+      // No answer from the server says nothing about the account, so the stored sign-in stays for the next attempt.
+      if (!_isUnanswered(error)) await ref.read(authServiceProvider).signOut();
       rethrow;
     }
   }
+
+  bool _isUnanswered(Object error) => error is DioException && error.response == null;
 }
 
 final authControllerProvider = AsyncNotifierProvider<AuthController, SessionUser?>(AuthController.new);
+
+/// Who is signed in, or null; what one person's data hangs on, so it is rebuilt when someone else signs in.
+final signedInUserIdProvider = Provider<String?>(
+  (ref) => ref.watch(authControllerProvider.select((auth) => auth.value?.userId)),
+);
