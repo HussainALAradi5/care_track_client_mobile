@@ -12,6 +12,7 @@ import '../../utilities/workforce/shift_interval.dart';
 import '../common/buttons/app_button.dart';
 import '../common/feedback/app_snack.dart';
 import '../common/inputs/picker_field.dart';
+import '../common/pickers/app_pickers.dart';
 import 'shift_preview.dart';
 import 'shift_quick_starts.dart';
 
@@ -34,8 +35,8 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
 
   Future<void> _pickDay() async {
     final today = startOfDay(DateTime.now());
-    final picked = await showDatePicker(
-      context: context,
+    final picked = await AppPickers.date(
+      context,
       initialDate: _day.isBefore(today) ? today : _day,
       firstDate: today,
       lastDate: today.add(const Duration(days: ShiftRules.plannableDays)),
@@ -44,7 +45,7 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
   }
 
   Future<void> _pickTime() async {
-    final picked = await showTimePicker(context: context, initialTime: _time);
+    final picked = await AppPickers.time(context, initialTime: _time);
     if (picked != null) setState(() => _time = picked);
   }
 
@@ -94,7 +95,7 @@ class _ShiftFormState extends ConsumerState<ShiftForm> {
                 Expanded(
                   child: PickerField(
                     label: ShiftTexts.start,
-                    value: _time.format(context),
+                    value: hourMinute(_time),
                     icon: Icons.schedule_rounded,
                     onTap: _pickTime,
                   ),
