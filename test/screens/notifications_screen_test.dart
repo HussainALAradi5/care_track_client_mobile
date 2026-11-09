@@ -4,7 +4,10 @@ import 'dart:typed_data';
 
 import 'package:care_track_client_mobile/config/theme/app_theme.dart';
 import 'package:care_track_client_mobile/constants/realtime.dart';
+import 'package:care_track_client_mobile/constants/route_paths.dart';
 import 'package:care_track_client_mobile/controllers/auth/auth_controller.dart';
+import 'package:care_track_client_mobile/enums/notifications/notification_link_type.dart';
+import 'package:care_track_client_mobile/utilities/notifications/notification_route.dart';
 import 'package:care_track_client_mobile/controllers/core/service_providers.dart';
 import 'package:care_track_client_mobile/enums/identity/user_type.dart';
 import 'package:care_track_client_mobile/interfaces/auth/token_source.dart';
@@ -140,6 +143,11 @@ Future<(FakeServer, FakeChannel)> pumpInbox(
 }
 
 void main() {
+  test('a booking opens the booking queue for staff', () {
+    expect(notificationRoute(NotificationLinkType.booking, staff: true), RoutePaths.staffQueue);
+    expect(notificationRoute(NotificationLinkType.booking, staff: false), RoutePaths.requests);
+  });
+
   setUpAll(() => GoogleFonts.config.allowRuntimeFetching = false);
 
   testWidgets('lists the inbox with its unread badge', (tester) async {
