@@ -20,7 +20,8 @@ final chatLiveProvider = Provider<void>((ref) {
   final reconnects = channel.opened.listen((_) {
     ref.invalidate(chatConversationsProvider);
     for (final conversationId in ref.read(openChatThreadsProvider)) {
-      ref.read(chatThreadProvider(conversationId).notifier).reload();
+      final thread = ref.read(chatThreadProvider(conversationId).notifier);
+      if (thread.isOnScreen) thread.reload();
     }
   });
   channel.connect();
@@ -37,7 +38,7 @@ void _receive(Ref ref, Map<String, dynamic> frame) {
   if (type == null || conversationId == null || data is! Map<String, dynamic>) return;
   final threadProvider = chatThreadProvider(conversationId);
   final thread = ref.exists(threadProvider) ? ref.read(threadProvider.notifier) : null;
-  final isOpen = thread != null && ref.read(appForegroundProvider);
+  final isOpen = thread != null && thread.isOnScreen && ref.read(appForegroundProvider);
   final conversations = ref.read(chatConversationsProvider.notifier);
   switch (type) {
     case ChatEventType.messageNew:

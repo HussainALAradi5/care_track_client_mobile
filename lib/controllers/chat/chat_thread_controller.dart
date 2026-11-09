@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show KeepAliveLink;
 
 import '../../models/chat/chat_message.dart';
 import '../../models/chat/chat_thread_state.dart';
@@ -16,10 +17,22 @@ class ChatThreadController extends Notifier<ChatThreadState> {
   ChatThreadController(this.conversationId);
 
   final String conversationId;
+  KeepAliveLink? _hold;
+  bool _onScreen = true;
+
+  /// Whether someone is looking at this thread; it can stay alive without that while a send settles.
+  bool get isOnScreen => _onScreen;
 
   @override
   ChatThreadState build() {
+    _hold = null;
+    _onScreen = true;
     if (ref.watch(signedInUserIdProvider) == null) return const ChatThreadState(loading: false);
+    ref.onCancel(() => _onScreen = false);
+    ref.onResume(() {
+      _onScreen = true;
+      reload();
+    });
     ref.listen(appForegroundProvider, (_, foreground) {
       if (foreground) _reportSeen();
     });
@@ -32,6 +45,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
   Future<void> load() async {
     try {
       final page = await ref.read(chatServiceProvider).messages(conversationId);
+      if (!ref.mounted) return;
       state = state.copyWith(
         messages: _ordered(page.items),
         loading: false,
@@ -41,7 +55,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
       );
       _reportSeen();
     } catch (_) {
-      state = state.copyWith(loading: false, failed: true);
+      if (ref.mounted) state = state.copyWith(loading: false, failed: true);
     }
   }
 
@@ -49,6 +63,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
   Future<void> reload() async {
     try {
       final page = await ref.read(chatServiceProvider).messages(conversationId);
+      if (!ref.mounted) return;
       final newestShown = state.messages.isEmpty ? 0 : state.messages.last.sequence;
       final oldestOfPage = page.items.isEmpty ? newestShown : page.items.map((m) => m.sequence).reduce(min);
       final leavesGap = page.hasMore && oldestOfPage > newestShown + 1;
@@ -90,6 +105,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
       replyText: reply?.text,
     );
     state = state.copyWith(outgoing: [...state.outgoing, outgoing], replyTo: () => null);
+    _syncHold();
     await _deliver(outgoing);
   }
 
@@ -105,8 +121,9 @@ class ChatThreadController extends Notifier<ChatThreadState> {
       final sent = await ref
           .read(chatServiceProvider)
           .send(conversationId, text: message.text, clientKey: message.clientKey, replyToId: message.replyToId);
-      applyNew(sent);
+      if (ref.mounted) applyNew(sent);
     } catch (_) {
+      if (!ref.mounted) return;
       state = state.copyWith(
         outgoing: [for (final o in state.outgoing) o.clientKey == message.clientKey ? o.copyWith(failed: true) : o],
       );
@@ -119,6 +136,7 @@ class ChatThreadController extends Notifier<ChatThreadState> {
       messages: _ordered([...state.messages.where((m) => m.id != message.id), message]),
       outgoing: state.outgoing.where((o) => o.clientKey != message.clientKey).toList(),
     );
+    _syncHold();
     _reportSeen();
   }
 
@@ -130,9 +148,19 @@ class ChatThreadController extends Notifier<ChatThreadState> {
     state = state.copyWith(messages: [for (final m in state.messages) m.id == messageId ? m.asDeleted() : m]);
   }
 
+  /// Stays alive while anything is unsettled, so leaving the screen cannot lose a failed send or strand one in flight.
+  void _syncHold() {
+    if (state.outgoing.isEmpty) {
+      _hold?.close();
+      _hold = null;
+    } else {
+      _hold ??= ref.keepAlive();
+    }
+  }
+
   /// The thread is open and the app is on screen: the newest message counts as read, and only then.
   void _reportSeen() {
-    if (state.messages.isEmpty || !ref.read(appForegroundProvider)) return;
+    if (state.messages.isEmpty || !_onScreen || !ref.read(appForegroundProvider)) return;
     final newest = state.messages.last.sequence;
     ref.read(chatConversationsProvider.notifier).markRead(conversationId, newest);
     ref.read(chatServiceProvider).markRead(conversationId, newest).catchError((_) {});
