@@ -6,4 +6,5 @@ class ErrorCodes {
   static const invitationNotFound = 'INVITATION_NOT_FOUND';
   static const residenceRequired = 'RESIDENCE_REQUIRED';
   static const mediaUnavailable = 'MEDIA_UNAVAILABLE';
+  static const attendanceNotAssigned = 'ATTENDANCE_NOT_ASSIGNED';
 }

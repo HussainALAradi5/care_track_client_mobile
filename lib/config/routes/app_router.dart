@@ -22,6 +22,7 @@ import '../../screens/patient/book_screen.dart';
 import '../../screens/patient/documents_screen.dart';
 import '../../screens/patient/bookings_screen.dart';
 import '../../screens/patient/home_screen.dart';
+import '../../screens/staff/attendance_screen.dart';
 import '../../screens/staff/desk_screen.dart';
 import '../../screens/staff/leave_requests_screen.dart';
 import '../../screens/staff/leave_screen.dart';
@@ -123,6 +124,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (_, state) => LeaveScreen(sickNoteId: state.uri.queryParameters['sickNote']),
           ),
           GoRoute(path: RoutePaths.staffLeaveRequests, builder: (_, _) => const LeaveRequestsScreen()),
+          GoRoute(path: RoutePaths.staffAttendance, builder: (_, _) => const AttendanceScreen()),
         ],
       ),
       ShellRoute(

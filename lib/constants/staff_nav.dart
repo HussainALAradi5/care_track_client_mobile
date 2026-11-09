@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/ui/staff_nav_item.dart';
 import 'permission_codes.dart';
 import 'route_paths.dart';
+import 'texts/attendance_texts.dart';
 import 'texts/document_texts.dart';
 import 'texts/leave_texts.dart';
 import 'texts/staff_request_texts.dart';
@@ -50,6 +51,12 @@ class StaffNav {
       selectedIcon: Icons.event_busy_rounded,
       path: RoutePaths.staffLeaveRequests,
       permission: PermissionCodes.leaveReadAll,
+    ),
+    StaffNavItem(
+      label: AttendanceTexts.nav,
+      icon: Icons.fingerprint_outlined,
+      selectedIcon: Icons.fingerprint_rounded,
+      path: RoutePaths.staffAttendance,
     ),
     StaffNavItem(
       label: LeaveTexts.nav,
