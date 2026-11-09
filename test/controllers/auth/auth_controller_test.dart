@@ -22,6 +22,16 @@ class StoredSession extends AuthService {
   Future<void> signOut() async => signOuts += 1;
 }
 
+class RefusedSignIn extends AuthService {
+  RefusedSignIn() : super(const FlutterAppAuth(), TokenStorage(const FlutterSecureStorage()));
+
+  @override
+  Future<bool> restore() async => false;
+
+  @override
+  Future<bool> signIn({bool register = false}) => throw StateError('token exchange refused');
+}
+
 class FailingSession implements SessionService {
   FailingSession(this.error);
 
@@ -61,5 +71,16 @@ void main() {
     final options = RequestOptions(path: '/me');
     final refused = DioException(requestOptions: options, response: Response(requestOptions: options, statusCode: 403));
     expect(await signOutsAfterProfileFails(refused), 1);
+  });
+
+  test('a refused sign-in reaches the screen as an error', () async {
+    final container = ProviderContainer(
+      retry: (_, _) => null,
+      overrides: [authServiceProvider.overrideWithValue(RefusedSignIn())],
+    );
+    addTearDown(container.dispose);
+    await container.read(authControllerProvider.future);
+    await container.read(authControllerProvider.notifier).signIn();
+    expect(container.read(authControllerProvider).hasError, isTrue);
   });
 }

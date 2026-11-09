@@ -30,7 +30,13 @@ class AuthController extends AsyncNotifier<SessionUser?> {
   Future<void> register() => _enter(register: true);
 
   Future<void> _enter({required bool register}) async {
-    if (!await ref.read(authServiceProvider).signIn(register: register)) return;
+    try {
+      if (!await ref.read(authServiceProvider).signIn(register: register)) return;
+    } catch (error, stackTrace) {
+      // A refused token exchange must reach the sign-in screen instead of leaving it looking untouched.
+      state = AsyncError(error, stackTrace);
+      return;
+    }
     state = const AsyncLoading();
     state = await AsyncValue.guard(_loadProfile);
   }
