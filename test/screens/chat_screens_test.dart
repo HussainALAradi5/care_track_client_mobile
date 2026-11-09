@@ -54,6 +54,9 @@ class FakeTokens implements TokenSource {
 }
 
 class FakeChannel implements RealtimeChannel {
+  @override
+  bool publish(String destination, Map<String, dynamic> body) => false;
+
   final controllers = <String, StreamController<Map<String, dynamic>>>{};
   final openedController = StreamController<void>.broadcast();
 
@@ -248,6 +251,8 @@ void main() {
   testWidgets('long-pressing a message starts a reply', (tester) async {
     await pump(tester, const ChatThreadScreen(conversationId: 'c1'), respond: (r) => chatResponses(r));
     await tester.longPress(find.text('from the doctor'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reply'));
     await tester.pumpAndSettle();
     expect(find.textContaining('Replying to'), findsOneWidget);
   });

@@ -1,20 +1,44 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/app_spacing.dart';
 import '../../constants/chat_constants.dart';
 import '../../constants/texts/chat_texts.dart';
 import '../../enums/chat/receipt_state.dart';
+import '../../models/chat/chat_attachment.dart';
 import '../../models/chat/chat_message.dart';
+import '../../models/chat/message_history.dart';
+import '../../models/chat/reaction_group.dart';
 import '../../utilities/time/dates.dart';
+import 'attachment_tile.dart';
+import 'edit_history.dart';
+import 'reaction_chips.dart';
 import 'receipt_ticks.dart';
 
-/// One message: its text or deleted placeholder, the message it answers, and the receipt on mine.
+/// One message: its text or deleted placeholder, the message it answers, attachments, reactions and the receipt on
+/// mine. Long press opens its actions.
 class MessageBubble extends StatelessWidget {
-  const MessageBubble({super.key, required this.message, required this.mine, required this.receipt, this.onReply});
+  const MessageBubble({
+    super.key,
+    required this.message,
+    required this.mine,
+    required this.receipt,
+    this.reactions = const [],
+    this.history,
+    this.onLongPress,
+    this.onReact,
+    this.onDownload,
+    this.onToggleHistory,
+  });
 
   final ChatMessage message;
   final bool mine;
   final ReceiptState receipt;
-  final VoidCallback? onReply;
+  final List<ReactionGroup> reactions;
+  final MessageHistory? history;
+  final VoidCallback? onLongPress;
+  final ValueChanged<ReactionGroup>? onReact;
+  final ValueChanged<ChatAttachment>? onDownload;
+  final VoidCallback? onToggleHistory;
 
   @override
   Widget build(BuildContext context) {
@@ -23,14 +47,14 @@ class MessageBubble extends StatelessWidget {
     return Align(
       alignment: mine ? Alignment.centerRight : Alignment.centerLeft,
       child: GestureDetector(
-        onLongPress: message.deleted ? null : onReply,
+        onLongPress: message.deleted ? null : onLongPress,
         child: Container(
           constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * ChatConstants.bubbleMaxWidthFraction),
-          margin: const EdgeInsets.symmetric(vertical: 4),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          margin: const EdgeInsets.symmetric(vertical: AppSpacing.tiny),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.medium, vertical: AppSpacing.small),
           decoration: BoxDecoration(
             color: mine ? scheme.primaryContainer : scheme.surfaceContainerHighest,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(AppSpacing.large),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,29 +67,27 @@ class MessageBubble extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: text.bodySmall?.copyWith(color: scheme.onSurfaceVariant, fontStyle: FontStyle.italic),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.tiny),
               ],
               if (message.deleted)
                 Text(ChatTexts.deleted, style: text.bodyMedium?.copyWith(fontStyle: FontStyle.italic))
               else if (message.text != null)
                 Text(message.text!, style: text.bodyMedium),
-              if (message.attachmentCount > 0)
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text('${ChatTexts.attachments} (${message.attachmentCount})', style: text.bodySmall),
-                ),
-              const SizedBox(height: 2),
+              for (final attachment in message.attachments)
+                AttachmentTile(attachment: attachment, onDownload: () => onDownload?.call(attachment)),
+              if (reactions.isNotEmpty) ReactionChips(groups: reactions, onTap: (g) => onReact?.call(g)),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(shortDateTime(message.createdAt.toLocal()), style: text.labelSmall),
                   if (message.edited) ...[
-                    const SizedBox(width: 6),
-                    Text(ChatTexts.edited, style: text.labelSmall),
+                    const SizedBox(width: AppSpacing.tiny),
+                    GestureDetector(onTap: onToggleHistory, child: Text(ChatTexts.edited, style: text.labelSmall)),
                   ],
-                  if (mine && !message.deleted) ...[const SizedBox(width: 6), ReceiptTicks(state: receipt)],
+                  if (mine && !message.deleted) ...[const SizedBox(width: AppSpacing.tiny), ReceiptTicks(state: receipt)],
                 ],
               ),
+              if (history != null) EditHistory(history: history!),
             ],
           ),
         ),

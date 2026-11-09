@@ -72,6 +72,45 @@ class ChatConversationsController extends AsyncNotifier<PagedItems<Conversation>
     state = AsyncData(paged.copyWith(items: [updated, ...current.where((c) => c.id != conversation.id)]));
   }
 
+  /// A conversation just started or changed: put at the top when new, replaced in place otherwise.
+  void upsert(Conversation conversation) {
+    final current = state.value;
+    if (current == null) return;
+    final known = current.items.any((c) => c.id == conversation.id);
+    state = AsyncData(
+      current.copyWith(
+        items: known
+            ? [for (final c in current.items) c.id == conversation.id ? conversation : c]
+            : [conversation, ...current.items],
+      ),
+    );
+  }
+
+  Future<void> toggleMute(Conversation conversation) async =>
+      upsert(await ref.read(chatServiceProvider).mute(conversation.id, !conversation.muted));
+
+  /// Hidden from this member's list until something new arrives there.
+  Future<void> hide(Conversation conversation) async {
+    await ref.read(chatServiceProvider).hide(conversation.id, true);
+    final current = state.value;
+    if (current == null) return;
+    state = AsyncData(current.copyWith(items: current.items.where((c) => c.id != conversation.id).toList()));
+  }
+
+  /// Someone came online or went offline.
+  void applyPresence(String userId, bool online) {
+    final current = state.value;
+    if (current == null) return;
+    state = AsyncData(
+      current.copyWith(
+        items: [
+          for (final c in current.items)
+            c.copyWith(participants: [for (final p in c.participants) p.userId == userId ? p.copyWith(online: online) : p]),
+        ],
+      ),
+    );
+  }
+
   void markRead(String conversationId, int sequence) {
     _update(conversationId, (c) => c.copyWith(lastReadSequence: sequence, unreadCount: 0));
   }

@@ -1,3 +1,5 @@
+import 'chat_attachment.dart';
+import 'chat_reaction.dart';
 import 'reply_preview.dart';
 
 /// Server MessageDto: a deleted message keeps its place with no text. clientKey ties it to the sender's retry.
@@ -13,7 +15,8 @@ class ChatMessage {
     required this.deleted,
     required this.createdAt,
     required this.clientKey,
-    required this.attachmentCount,
+    this.reactions = const [],
+    this.attachments = const [],
   });
 
   final String id;
@@ -26,7 +29,25 @@ class ChatMessage {
   final bool deleted;
   final DateTime createdAt;
   final String clientKey;
-  final int attachmentCount;
+  final List<ChatReaction> reactions;
+  final List<ChatAttachment> attachments;
+
+  int get attachmentCount => attachments.length;
+
+  ChatMessage withReactions(List<ChatReaction> value) => ChatMessage(
+    id: id,
+    conversationId: conversationId,
+    sequence: sequence,
+    senderId: senderId,
+    text: text,
+    replyTo: replyTo,
+    edited: edited,
+    deleted: deleted,
+    createdAt: createdAt,
+    clientKey: clientKey,
+    reactions: value,
+    attachments: attachments,
+  );
 
   ChatMessage asDeleted() => ChatMessage(
     id: id,
@@ -39,7 +60,6 @@ class ChatMessage {
     deleted: true,
     createdAt: createdAt,
     clientKey: clientKey,
-    attachmentCount: 0,
   );
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
@@ -53,6 +73,9 @@ class ChatMessage {
     deleted: json['deleted'] as bool,
     createdAt: DateTime.parse(json['createdAt'] as String),
     clientKey: json['clientKey'] as String,
-    attachmentCount: (json['attachments'] as List<dynamic>).length,
+    reactions: [for (final r in json['reactions'] as List<dynamic>) ChatReaction.fromJson(r as Map<String, dynamic>)],
+    attachments: [
+      for (final a in json['attachments'] as List<dynamic>) ChatAttachment.fromJson(a as Map<String, dynamic>),
+    ],
   );
 }

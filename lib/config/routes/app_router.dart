@@ -11,6 +11,7 @@ import '../../screens/identity/profile_screen.dart';
 import '../../screens/notifications/notifications_screen.dart';
 import '../../screens/chat/chat_list_screen.dart';
 import '../../screens/chat/chat_thread_screen.dart';
+import '../../screens/chat/new_conversation_screen.dart';
 import '../../screens/accounting/books_screen.dart';
 import '../../screens/accounting/journal_screen.dart';
 import '../../screens/accounting/reports_screen.dart';
@@ -91,6 +92,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: RoutePaths.profile, builder: (_, _) => const ProfileScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, _) => const NotificationsScreen()),
       GoRoute(path: RoutePaths.chat, builder: (_, _) => const ChatListScreen()),
+      GoRoute(path: RoutePaths.chatNew, builder: (_, _) => const NewConversationScreen()),
       GoRoute(
         path: '${RoutePaths.chat}/:conversationId',
         builder: (_, state) => ChatThreadScreen(conversationId: state.pathParameters['conversationId']!),

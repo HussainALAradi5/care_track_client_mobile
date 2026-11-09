@@ -15,6 +15,7 @@ class RoutePaths {
   static const notifications = '/notifications';
   static const chat = '/chat';
   static String chatThread(String id) => '/chat/$id';
+  static const chatNew = '/chat/new';
 
   static const staff = '/staff';
   static const staffQueue = '/staff/queue';

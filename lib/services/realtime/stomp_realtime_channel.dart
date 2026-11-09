@@ -17,14 +17,27 @@ class StompRealtimeChannel implements RealtimeChannel {
   final _connectHeaders = <String, String>{};
   final _destinations = <String, StreamController<Map<String, dynamic>>>{};
   final _opened = StreamController<void>.broadcast();
+  final _subscribed = <String>{};
   StompClient? _client;
 
   @override
   Stream<void> get opened => _opened.stream;
 
   @override
-  Stream<Map<String, dynamic>> watch(String destination) =>
-      _destinations.putIfAbsent(destination, StreamController<Map<String, dynamic>>.broadcast).stream;
+  Stream<Map<String, dynamic>> watch(String destination) {
+    final controller = _destinations.putIfAbsent(destination, StreamController<Map<String, dynamic>>.broadcast);
+    // A destination asked for after the connection opened still gets its subscription.
+    if (_client?.connected ?? false) _subscribe(destination, controller);
+    return controller.stream;
+  }
+
+  @override
+  bool publish(String destination, Map<String, dynamic> body) {
+    final client = _client;
+    if (client == null || !client.connected) return false;
+    client.send(destination: destination, body: jsonEncode(body), headers: const {Realtime.contentTypeHeader: Realtime.json});
+    return true;
+  }
 
   @override
   void connect() {
@@ -46,6 +59,7 @@ class StompRealtimeChannel implements RealtimeChannel {
   void disconnect() {
     _client?.deactivate();
     _client = null;
+    _subscribed.clear();
   }
 
   Future<void> _authorize() async {
@@ -60,10 +74,16 @@ class StompRealtimeChannel implements RealtimeChannel {
   }
 
   void _onConnect(StompFrame frame) {
+    _subscribed.clear();
     for (final entry in _destinations.entries) {
-      _client?.subscribe(destination: entry.key, callback: (message) => _deliver(entry.value, message));
+      _subscribe(entry.key, entry.value);
     }
     _opened.add(null);
+  }
+
+  void _subscribe(String destination, StreamController<Map<String, dynamic>> controller) {
+    if (!_subscribed.add(destination)) return;
+    _client?.subscribe(destination: destination, callback: (message) => _deliver(controller, message));
   }
 
   void _deliver(StreamController<Map<String, dynamic>> controller, StompFrame message) {

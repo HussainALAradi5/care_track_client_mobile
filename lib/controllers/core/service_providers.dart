@@ -26,6 +26,8 @@ import '../../services/workforce/shift_service.dart';
 import '../../services/workforce/staff_request_service.dart';
 import '../../services/notifications/notification_service.dart';
 import '../../services/chat/chat_service.dart';
+import '../../services/files/device_file_access.dart';
+import '../../interfaces/files/file_access.dart';
 import '../../services/realtime/stomp_realtime_channel.dart';
 import '../../config/app_config.dart';
 import '../../interfaces/realtime/realtime_channel.dart';
@@ -58,6 +60,7 @@ final shiftServiceProvider = Provider((ref) => ShiftService(ref.watch(apiClientP
 final staffRequestServiceProvider = Provider((ref) => StaffRequestService(ref.watch(apiClientProvider)));
 final notificationServiceProvider = Provider((ref) => NotificationService(ref.watch(apiClientProvider)));
 final chatServiceProvider = Provider((ref) => ChatService(ref.watch(apiClientProvider)));
+final fileAccessProvider = Provider<FileAccess>((ref) => const DeviceFileAccess());
 
 final realtimeChannelProvider = Provider<RealtimeChannel>(
   (ref) => StompRealtimeChannel(ref.watch(authServiceProvider), AppConfig.realtimeUrl),

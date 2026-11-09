@@ -23,6 +23,11 @@ class ChatListScreen extends ConsumerWidget {
     final controller = ref.read(chatConversationsProvider.notifier);
     return Scaffold(
       appBar: AppBar(title: const Text(ChatTexts.title)),
+      floatingActionButton: FloatingActionButton(
+        tooltip: ChatTexts.newConversation,
+        onPressed: () => context.push(RoutePaths.chatNew),
+        child: const Icon(Icons.edit_rounded),
+      ),
       body: RefreshIndicator(
         onRefresh: controller.refresh,
         child: AsyncBody<PagedItems<Conversation>>(
