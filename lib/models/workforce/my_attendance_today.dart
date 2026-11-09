@@ -1,3 +1,5 @@
+import '../../enums/workforce/staff_attendance_status.dart';
+import 'staff_attendance.dart';
 import 'work_attendance.dart';
 import 'work_schedule.dart';
 
@@ -11,6 +13,8 @@ class MyAttendanceToday {
     this.shiftStartsAt,
     this.leaveTypeName,
     this.today,
+    this.shiftId,
+    this.shiftAttendance,
   });
 
   final bool workingDay;
@@ -20,6 +24,13 @@ class MyAttendanceToday {
   final WorkAttendance? today;
   final bool canClockIn;
   final bool canClockOut;
+  final String? shiftId;
+
+  /// Null until they clock in to today's shift.
+  final StaffAttendance? shiftAttendance;
+
+  bool get canClockInToShift => shiftId != null && shiftAttendance == null;
+  bool get canClockOutOfShift => shiftId != null && shiftAttendance?.status == StaffAttendanceStatus.checkedIn;
 
   factory MyAttendanceToday.fromJson(Map<String, dynamic> json) => MyAttendanceToday(
     workingDay: json['workingDay'] as bool,
@@ -29,5 +40,9 @@ class MyAttendanceToday {
     today: json['today'] == null ? null : WorkAttendance.fromJson(json['today'] as Map<String, dynamic>),
     canClockIn: json['canClockIn'] as bool,
     canClockOut: json['canClockOut'] as bool,
+    shiftId: json['shiftId'] as String?,
+    shiftAttendance: json['shiftAttendance'] == null
+        ? null
+        : StaffAttendance.fromJson(json['shiftAttendance'] as Map<String, dynamic>),
   );
 }

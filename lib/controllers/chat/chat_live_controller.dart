@@ -39,7 +39,8 @@ final chatLiveProvider = Provider<void>((ref) {
   });
 });
 
-/// The server refused a live action; only its code comes back, so the send's own timeout marks it failed.
+/// The server refused a live action; only its code comes back. A refused send then falls back to REST on its own
+/// timeout, and is marked failed only if REST refuses it too.
 void _refused(Ref ref, Map<String, dynamic> frame) {
   final code = frame['code'] as String? ?? '';
   ref.read(appToastProvider.notifier).show(AppToast(message: ChatTexts.errors[code] ?? messageForCode(code)));
