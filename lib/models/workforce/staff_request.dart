@@ -14,6 +14,8 @@ class StaffRequest {
     required this.decisionNote,
     required this.version,
     required this.canCancel,
+    this.userName,
+    this.canDecide = false,
   });
 
   final String id;
@@ -27,6 +29,10 @@ class StaffRequest {
   final int version;
   final bool canCancel;
 
+  /// Who raised it, for HR's list.
+  final String? userName;
+  final bool canDecide;
+
   factory StaffRequest.fromJson(Map<String, dynamic> json) => StaffRequest(
     id: json['id'] as String,
     code: json['code'] as String,
@@ -38,5 +44,7 @@ class StaffRequest {
     decisionNote: json['decisionNote'] as String?,
     version: (json['version'] as num).toInt(),
     canCancel: json['canCancel'] as bool,
+    userName: json['userName'] as String?,
+    canDecide: json['canDecide'] as bool? ?? false,
   );
 }

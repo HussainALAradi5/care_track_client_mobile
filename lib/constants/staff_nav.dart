@@ -55,6 +55,13 @@ class StaffNav {
       permission: PermissionCodes.leaveReadAll,
     ),
     StaffNavItem(
+      label: StaffRequestTexts.navHr,
+      icon: Icons.assignment_ind_outlined,
+      selectedIcon: Icons.assignment_ind_rounded,
+      path: RoutePaths.staffHrRequests,
+      permission: PermissionCodes.staffRequestHandle,
+    ),
+    StaffNavItem(
       label: AttendanceTexts.nav,
       icon: Icons.fingerprint_outlined,
       selectedIcon: Icons.fingerprint_rounded,

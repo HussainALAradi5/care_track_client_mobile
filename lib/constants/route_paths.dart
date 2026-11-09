@@ -22,6 +22,7 @@ class RoutePaths {
   static const staffShifts = '/staff/shifts';
   static const staffVisits = '/staff/visits';
   static const staffRequests = '/staff/requests';
+  static const staffHrRequests = '/staff/hr-requests';
   static const staffAttendance = '/staff/attendance';
   static const staffPayslips = '/staff/payslips';
   static String staffPayslip(String id) => '/staff/payslips/$id';

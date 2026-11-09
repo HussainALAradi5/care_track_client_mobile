@@ -22,6 +22,20 @@ class StaffRequestTexts {
   static String raised(String when) => 'Raised $when';
   static String decidedBy(String name) => 'By $name';
 
+  static const navHr = 'Staff requests';
+  static const hrTitle = 'Staff requests';
+  static const hrSubtitle = 'What the people at your hospitals ask HR for. Approve or reject what is waiting.';
+  static const hrEmpty = 'No staff requests here';
+  static const hrEmptyHint = 'Try another status.';
+  static const all = 'All';
+  static const approve = 'Approve';
+  static const reject = 'Reject';
+  static String approved(String name) => "$name's request approved.";
+  static String rejected(String name) => "$name's request rejected.";
+  static const rejectTitle = 'Reject this request?';
+  static String rejectMessage(String name, String type) => '$name asked for: $type. Say why it is rejected.';
+  static const rejectReason = 'Why';
+
   static const types = {
     StaffRequestType.employmentLetter: 'Employment letter',
     StaffRequestType.salaryCertificate: 'Salary certificate',

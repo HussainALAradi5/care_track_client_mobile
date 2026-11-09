@@ -62,6 +62,8 @@ class Endpoints {
   // Staff requests (one Organization's)
   static String staffRequests(String organizationId) => '/organizations/$organizationId/staff-requests';
   static String myStaffRequests(String organizationId) => '${staffRequests(organizationId)}/mine';
+  static String decideStaffRequest(String organizationId, String requestId) =>
+      '${staffRequests(organizationId)}/$requestId/decision';
   static String cancelStaffRequest(String organizationId, String requestId) =>
       '${staffRequests(organizationId)}/$requestId/cancel';
 

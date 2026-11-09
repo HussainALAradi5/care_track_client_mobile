@@ -30,6 +30,7 @@ import '../../screens/staff/department_screen.dart';
 import '../../screens/staff/my_requests_screen.dart';
 import '../../screens/staff/payslip_detail_screen.dart';
 import '../../screens/staff/payslips_screen.dart';
+import '../../screens/staff/staff_requests_screen.dart';
 import '../../screens/staff/team_screen.dart';
 import '../../screens/staff/queue_screen.dart';
 import '../../screens/staff/shifts_screen.dart';
@@ -128,6 +129,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             builder: (_, state) => LeaveScreen(sickNoteId: state.uri.queryParameters['sickNote']),
           ),
           GoRoute(path: RoutePaths.staffLeaveRequests, builder: (_, _) => const LeaveRequestsScreen()),
+          GoRoute(path: RoutePaths.staffHrRequests, builder: (_, _) => const StaffRequestsScreen()),
           GoRoute(path: RoutePaths.staffAttendance, builder: (_, _) => const AttendanceScreen()),
           GoRoute(path: RoutePaths.staffPayslips, builder: (_, _) => const PayslipsScreen()),
           GoRoute(
