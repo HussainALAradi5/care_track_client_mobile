@@ -6,6 +6,9 @@ class AppConfig {
   const AppConfig._();
 
   static const apiUrl = String.fromEnvironment('API_URL', defaultValue: 'http://localhost:8080');
+  /// The STOMP endpoint: the API origin over ws or wss, at the server's /ws path.
+  static String get realtimeUrl => '${apiUrl.replaceFirst('http', 'ws')}/ws';
+
   static const authIssuer = String.fromEnvironment(
     'AUTH_ISSUER',
     defaultValue: 'http://localhost:8081/realms/caretrack',

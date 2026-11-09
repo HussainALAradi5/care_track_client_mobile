@@ -17,6 +17,10 @@ import '../../services/identity/staff_hospital_service.dart';
 import '../../services/identity/staff_organization_service.dart';
 import '../../services/workforce/shift_service.dart';
 import '../../services/workforce/staff_request_service.dart';
+import '../../services/notifications/notification_service.dart';
+import '../../services/realtime/stomp_realtime_channel.dart';
+import '../../config/app_config.dart';
+import '../../interfaces/realtime/realtime_channel.dart';
 
 /// Loaded in main() before the app starts, then overridden in the ProviderScope.
 final sharedPreferencesProvider = Provider<SharedPreferences>(
@@ -37,6 +41,11 @@ final appointmentServiceProvider = Provider((ref) => AppointmentService(ref.watc
 final staffHospitalServiceProvider = Provider((ref) => StaffHospitalService(ref.watch(apiClientProvider)));
 final shiftServiceProvider = Provider((ref) => ShiftService(ref.watch(apiClientProvider)));
 final staffRequestServiceProvider = Provider((ref) => StaffRequestService(ref.watch(apiClientProvider)));
+final notificationServiceProvider = Provider((ref) => NotificationService(ref.watch(apiClientProvider)));
+
+final realtimeChannelProvider = Provider<RealtimeChannel>(
+  (ref) => StompRealtimeChannel(ref.watch(authServiceProvider), AppConfig.realtimeUrl),
+);
 final staffOrganizationServiceProvider = Provider((ref) => StaffOrganizationService(ref.watch(apiClientProvider)));
 final accountingServiceProvider = Provider((ref) => AccountingService(ref.watch(apiClientProvider)));
 final writtenDocumentServiceProvider = Provider((ref) => WrittenDocumentService(ref.watch(apiClientProvider)));

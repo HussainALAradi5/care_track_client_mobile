@@ -8,6 +8,7 @@ class RoutePaths {
   static const requests = '/requests';
   static const visits = '/visits';
   static const documents = '/documents';
+  static const notifications = '/notifications';
 
   static const staff = '/staff';
   static const staffQueue = '/staff/queue';
