@@ -2,9 +2,12 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:care_track_client_mobile/config/theme/app_theme.dart';
+import 'package:care_track_client_mobile/controllers/auth/auth_controller.dart';
 import 'package:care_track_client_mobile/controllers/core/service_providers.dart';
 import 'package:care_track_client_mobile/controllers/identity/staff_context_controller.dart';
+import 'package:care_track_client_mobile/enums/identity/user_type.dart';
 import 'package:care_track_client_mobile/interfaces/auth/token_source.dart';
+import 'package:care_track_client_mobile/models/identity/session_user.dart';
 import 'package:care_track_client_mobile/models/identity/staff_context.dart';
 import 'package:care_track_client_mobile/models/identity/staff_hospital.dart';
 import 'package:care_track_client_mobile/services/api/api_client.dart';
@@ -93,6 +96,21 @@ class FixedStaff extends StaffContextController {
 
   @override
   Future<StaffContext> build() async => StaffContext(hospitals: [staffHospital(permissions)], selectedId: 'h1');
+}
+
+const patient = SessionUser(userId: 'u1', name: 'Rana Patient', userType: UserType.patient, username: 'rana');
+const doctor = SessionUser(userId: 'u2', name: 'Dana Doctor', userType: UserType.doctor, username: 'dana');
+
+/// Someone already signed in.
+class FixedAuth extends AuthController {
+  FixedAuth(this.user);
+
+  final SessionUser? user;
+
+  @override
+  Future<SessionUser?> build() async => user;
+
+  Future<void> signOutLocally() async => state = const AsyncData(null);
 }
 
 Dio dioFor(FakeServer server) => Dio(BaseOptions(baseUrl: 'http://test/api'))..httpClientAdapter = server;

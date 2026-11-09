@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../../constants/route_paths.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/auth/pending_sign_up_controller.dart';
+import '../../controllers/identity/care_mode_controller.dart';
+import '../../screens/identity/profile_screen.dart';
 import '../../screens/notifications/notifications_screen.dart';
 import '../../screens/chat/chat_list_screen.dart';
 import '../../screens/chat/chat_thread_screen.dart';
@@ -48,27 +50,24 @@ final appRouterProvider = Provider<GoRouter>((ref) {
         final allowed = ref.read(pendingSignUpProvider) ? RoutePaths.signUp : RoutePaths.signIn;
         return at == allowed ? null : allowed;
       }
-      // The inbox opens over any side of the app.
-      if (at == RoutePaths.notifications || at.startsWith(RoutePaths.chat)) return null;
+      // The inbox and the person's own account open over any side of the app.
+      if (at == RoutePaths.notifications || at == RoutePaths.profile || at.startsWith(RoutePaths.chat)) return null;
       final onBooksRoute = at.startsWith(RoutePaths.books);
-      if (user.userType.isAccountant) return onBooksRoute ? null : RoutePaths.books;
-      final staff = user.userType.isStaff;
       final onStaffRoute = at.startsWith(RoutePaths.staff);
-      if (staff && !onStaffRoute) return RoutePaths.staff;
-      if (!staff &&
-          (onStaffRoute ||
-              onBooksRoute ||
-              at == RoutePaths.signIn ||
-              at == RoutePaths.signUp ||
-              at == RoutePaths.splash)) {
-        return RoutePaths.home;
+      // Patients, and staff on "My care", are on the patient side.
+      if (!user.userType.isStaff || ref.read(careModeProvider)) {
+        final leaves =
+            onStaffRoute || onBooksRoute || at == RoutePaths.signIn || at == RoutePaths.signUp || at == RoutePaths.splash;
+        return leaves ? RoutePaths.home : null;
       }
-      return null;
+      if (user.userType.isAccountant) return onBooksRoute ? null : RoutePaths.books;
+      return onStaffRoute ? null : RoutePaths.staff;
     },
     routes: [
       GoRoute(path: RoutePaths.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(path: RoutePaths.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(path: RoutePaths.signUp, builder: (_, _) => const SignUpScreen()),
+      GoRoute(path: RoutePaths.profile, builder: (_, _) => const ProfileScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, _) => const NotificationsScreen()),
       GoRoute(path: RoutePaths.chat, builder: (_, _) => const ChatListScreen()),
       GoRoute(

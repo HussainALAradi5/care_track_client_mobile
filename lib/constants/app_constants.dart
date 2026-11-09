@@ -19,5 +19,6 @@ class AppConstants {
   static const hospitalKey = 'caretrack.hospital';
   static const staffHospitalKey = 'caretrack.staffHospital';
   static const staffOrganizationKey = 'caretrack.staffOrganization';
+  static const careModeKey = 'caretrack.careMode';
   static const tokenKey = 'caretrack.tokens';
 }
