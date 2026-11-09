@@ -112,4 +112,3 @@ class _Summary extends StatelessWidget {
     );
   }
 }
-

@@ -76,3 +76,11 @@ On Windows, building plugins for Android or desktop needs Developer Mode, which 
 - `flutter analyze`: no issues.
 - `flutter test`: unit tests for utilities (including the desk time windows), validation and model parsing; widget tests for the UI kit; and widget tests that render the queue, desk and shifts screens through the real controllers and services against a fake HTTP server (requests, headers and bodies checked).
 - `flutter build web`: compiles. The web build can only show the sign-in screen, because `flutter_appauth` supports Android, iOS and macOS only.
+
+## Screenshots
+
+From a real Android phone against the local development stack.
+
+| Find a hospital | Patient overview | Chat |
+| --- | --- | --- |
+| ![Find a hospital](docs/screenshots/find-hospital.png) | ![Patient overview](docs/screenshots/patient-overview.png) | ![Chat](docs/screenshots/chat-thread.png) |
