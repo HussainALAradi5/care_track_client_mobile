@@ -9,6 +9,10 @@ class EnrollmentService {
 
   final ApiClient _api;
 
+  /// Registers the caller as a patient at a Hospital (anyone: staff elsewhere or here too).
+  Future<EnrolledHospital> enrollMe(String hospitalId) async =>
+      EnrolledHospital.fromJson(await _api.post(Endpoints.enrollMe, body: {'hospitalId': hospitalId}));
+
   Future<PageResult<EnrolledHospital>> myHospitals(PageRequest request) async =>
       PageResult.fromJson(await _api.get(Endpoints.myHospitals, query: request.toQuery()), EnrolledHospital.fromJson);
 }

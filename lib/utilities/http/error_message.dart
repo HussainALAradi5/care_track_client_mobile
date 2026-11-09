@@ -4,6 +4,9 @@ import '../../constants/texts/common_texts.dart';
 import '../../models/common/api_error.dart';
 import '../../models/common/user_facing_error.dart';
 
+/// The server's machine code in a failed call, when it sent one.
+String? apiErrorCodeOf(Object? error) => error is DioException ? ApiError.tryParse(error.response?.data)?.code : null;
+
 /// A sentence a person can act on: mapped code text, then the server message, then a generic fallback.
 String errorMessageOf(Object? error) {
   if (error is UserFacingError) return error.message;

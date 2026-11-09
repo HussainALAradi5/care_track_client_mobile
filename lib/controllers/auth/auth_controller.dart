@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/error_codes.dart';
 import '../../enums/ui/picker_style.dart';
-import '../../models/common/api_error.dart';
 import '../../models/identity/session_user.dart';
+import '../../utilities/http/error_message.dart';
 import '../core/service_providers.dart';
 import 'pending_sign_up_controller.dart';
 
@@ -57,7 +57,7 @@ class AuthController extends AsyncNotifier<SessionUser?> {
     try {
       return await _accountOfThisSignIn();
     } catch (error) {
-      if (_codeOf(error) == ErrorCodes.invitationNotFound) {
+      if (apiErrorCodeOf(error) == ErrorCodes.invitationNotFound) {
         ref.read(pendingSignUpProvider.notifier).set(true);
         return null;
       }
@@ -73,12 +73,11 @@ class AuthController extends AsyncNotifier<SessionUser?> {
     try {
       return await session.me();
     } catch (error) {
-      if (_codeOf(error) != ErrorCodes.signUpRequired) rethrow;
+      if (apiErrorCodeOf(error) != ErrorCodes.signUpRequired) rethrow;
       return session.linkInvitation();
     }
   }
 
-  String? _codeOf(Object error) => error is DioException ? ApiError.tryParse(error.response?.data)?.code : null;
 
   bool _isUnanswered(Object error) => error is DioException && error.response == null;
 }

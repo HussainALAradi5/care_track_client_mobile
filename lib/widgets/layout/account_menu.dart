@@ -56,6 +56,10 @@ class AccountMenu extends ConsumerWidget {
                 ),
               ),
             PopupMenuItem<void>(
+              onTap: () => context.push(RoutePaths.hospitals),
+              child: const ListTile(leading: Icon(Icons.local_hospital_rounded), title: Text(CareModeTexts.hospitals)),
+            ),
+            PopupMenuItem<void>(
               onTap: () => showPickerStyleSheet(context),
               child: const ListTile(leading: Icon(Icons.event_rounded), title: Text(PickerTexts.pickerStyle)),
             ),

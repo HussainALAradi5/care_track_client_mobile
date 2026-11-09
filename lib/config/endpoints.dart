@@ -27,6 +27,7 @@ class Endpoints {
   static const myStaffHospitals = '/auth/me/hospitals';
   static const myOrganizations = '/auth/me/organizations';
   static const myHospitals = '/patients/me/hospitals';
+  static const enrollMe = '/patients/me/hospitals';
   static String myCareTeam(String hospitalId) => '/hospitals/$hospitalId/patients/me/care-team';
   static String myAppointments(String hospitalId) => '/hospitals/$hospitalId/patients/me/appointments';
   static String createBooking(String hospitalId) => '/hospitals/$hospitalId/bookings';

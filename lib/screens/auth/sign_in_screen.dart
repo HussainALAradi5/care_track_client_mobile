@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../constants/app_constants.dart';
+import '../../constants/route_paths.dart';
+import '../../constants/texts/care_mode_texts.dart';
 import '../../constants/texts/common_texts.dart';
 import '../../constants/texts/sign_up_texts.dart';
 import '../../controllers/auth/auth_controller.dart';
@@ -61,6 +64,12 @@ class SignInScreen extends ConsumerWidget {
                             variant: ButtonVariant.outlined,
                             expand: true,
                             onPressed: () => ref.read(authControllerProvider.notifier).register(),
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton.icon(
+                            onPressed: () => context.push(RoutePaths.find),
+                            icon: const Icon(Icons.travel_explore_rounded),
+                            label: const Text(CareModeTexts.findHospitals),
                           ),
                         ],
                       ),

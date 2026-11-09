@@ -16,6 +16,12 @@ String visitTime(DateTime startsAt, DateTime endsAt) {
 
 String shortDateTime(DateTime value) => DateFormat('d MMM, HH:mm').format(value);
 
+/// '16:30': a clock time, always 24-hour.
+String timeOfDayLabel(DateTime value) => DateFormat.Hm().format(value);
+
+/// 'Mon': a short weekday.
+String weekdayLabel(DateTime value) => DateFormat('EEE').format(value);
+
 /// 'Thu, 5 Nov 2026' in the device's locale (a picked day in a form).
 String longDate(DateTime value) => DateFormat('EEE, d MMM y').format(value);
 

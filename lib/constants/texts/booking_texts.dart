@@ -8,7 +8,7 @@ class BookingTexts {
   static const stepReview = 'Review';
   static const steps = [stepHospital, stepClinician, stepTime, stepReview];
   static const noHospitals = 'You are not enrolled at a hospital yet.';
-  static const noHospitalsHint = 'Ask the hospital reception to enrol you, then come back here.';
+  static const noHospitalsHint = 'Find a hospital near you and register as a patient, or ask its reception.';
   static const noCareTeam = 'No doctor is assigned to you here yet.';
   static const noCareTeamHint = 'Your hospital assigns a care team before you can book.';
   static const duration = 'Length';

@@ -20,6 +20,15 @@ class PatientContextController extends AsyncNotifier<PatientContext> {
     return PatientContext(hospitals: page.items, selectedId: stored);
   }
 
+  /// Registers the caller at a Hospital and makes it the selected one.
+  Future<EnrolledHospital> register(String hospitalId) async {
+    final hospital = await ref.read(enrollmentServiceProvider).enrollMe(hospitalId);
+    await ref.read(sharedPreferencesProvider).setString(AppConstants.hospitalKey, hospital.id);
+    ref.invalidateSelf();
+    await future;
+    return hospital;
+  }
+
   Future<void> select(String hospitalId) async {
     final current = state.value;
     if (current == null || current.selectedId == hospitalId) return;

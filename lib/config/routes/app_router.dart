@@ -5,6 +5,8 @@ import '../../constants/route_paths.dart';
 import '../../controllers/auth/auth_controller.dart';
 import '../../controllers/auth/pending_sign_up_controller.dart';
 import '../../controllers/identity/care_mode_controller.dart';
+import '../../screens/facilities/find_hospital_screen.dart';
+import '../../screens/facilities/hospitals_near_screen.dart';
 import '../../screens/identity/profile_screen.dart';
 import '../../screens/notifications/notifications_screen.dart';
 import '../../screens/chat/chat_list_screen.dart';
@@ -46,12 +48,19 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       final at = state.matchedLocation;
       if (auth.isLoading && !auth.hasValue) return RoutePaths.splash;
       final user = auth.value;
+      // The hospital search is public and opens over any side.
+      if (at == RoutePaths.find) return null;
       if (user == null) {
         final allowed = ref.read(pendingSignUpProvider) ? RoutePaths.signUp : RoutePaths.signIn;
         return at == allowed ? null : allowed;
       }
       // The inbox and the person's own account open over any side of the app.
-      if (at == RoutePaths.notifications || at == RoutePaths.profile || at.startsWith(RoutePaths.chat)) return null;
+      if (at == RoutePaths.notifications ||
+          at == RoutePaths.profile ||
+          at == RoutePaths.hospitals ||
+          at.startsWith(RoutePaths.chat)) {
+        return null;
+      }
       final onBooksRoute = at.startsWith(RoutePaths.books);
       final onStaffRoute = at.startsWith(RoutePaths.staff);
       // Patients, and staff on "My care", are on the patient side.
@@ -67,6 +76,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(path: RoutePaths.splash, builder: (_, _) => const SplashScreen()),
       GoRoute(path: RoutePaths.signIn, builder: (_, _) => const SignInScreen()),
       GoRoute(path: RoutePaths.signUp, builder: (_, _) => const SignUpScreen()),
+      GoRoute(path: RoutePaths.find, builder: (_, _) => const FindHospitalScreen()),
+      GoRoute(path: RoutePaths.hospitals, builder: (_, _) => const HospitalsNearScreen()),
       GoRoute(path: RoutePaths.profile, builder: (_, _) => const ProfileScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, _) => const NotificationsScreen()),
       GoRoute(path: RoutePaths.chat, builder: (_, _) => const ChatListScreen()),
