@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../constants/chat_constants.dart';
 import '../../constants/texts/chat_texts.dart';
 import '../../enums/chat/receipt_state.dart';
 import '../../models/chat/chat_message.dart';
@@ -24,7 +25,7 @@ class MessageBubble extends StatelessWidget {
       child: GestureDetector(
         onLongPress: message.deleted ? null : onReply,
         child: Container(
-          constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * 0.78),
+          constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width * ChatConstants.bubbleMaxWidthFraction),
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           decoration: BoxDecoration(
