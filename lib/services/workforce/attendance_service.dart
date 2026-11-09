@@ -1,6 +1,8 @@
 import '../../config/endpoints.dart';
+import '../../dtos/workforce/clock_out_request.dart';
 import '../../models/workforce/day_attendance_row.dart';
 import '../../models/workforce/my_attendance_today.dart';
+import '../../models/workforce/staff_attendance.dart';
 import '../../models/workforce/work_attendance.dart';
 import '../../utilities/time/dates.dart';
 import '../api/api_client.dart';
@@ -18,8 +20,20 @@ class AttendanceService {
       MyAttendanceToday.fromJson(await _api.post(Endpoints.clockIn(hospitalId)));
 
   Future<MyAttendanceToday> clockOut(String hospitalId, int expectedVersion) async => MyAttendanceToday.fromJson(
-    await _api.post(Endpoints.clockOut(hospitalId), body: {'expectedVersion': expectedVersion}),
+    await _api.post(Endpoints.clockOut(hospitalId), body: ClockOutRequest(expectedVersion: expectedVersion).toJson()),
   );
+
+  /// Only the doctor or nurse the shift belongs to may clock in to it.
+  Future<StaffAttendance> clockInToShift(String hospitalId, String shiftId) async =>
+      StaffAttendance.fromJson(await _api.post(Endpoints.shiftClockIn(hospitalId, shiftId)));
+
+  Future<StaffAttendance> clockOutOfShift(String hospitalId, String shiftId, int expectedVersion) async =>
+      StaffAttendance.fromJson(
+        await _api.post(
+          Endpoints.shiftClockOut(hospitalId, shiftId),
+          body: ClockOutRequest(expectedVersion: expectedVersion).toJson(),
+        ),
+      );
 
   /// The caller's days, the last two weeks by default.
   Future<List<WorkAttendance>> mine(String hospitalId) async => [

@@ -19,7 +19,7 @@ import '../../models/files/picked_attachment.dart';
 import '../../utilities/chat/attachment_files.dart';
 import '../api/api_client.dart';
 
-/// Chat over REST: the source of truth, and how the app sends, since a retry there can never duplicate a message.
+/// Chat over REST: the source of truth, and the fallback for a send the live channel misses; its key stops duplicates.
 class ChatService {
   ChatService(this._api);
 

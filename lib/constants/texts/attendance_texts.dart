@@ -9,7 +9,7 @@ class AttendanceTexts {
   static String hours(String days, String start, String end) => '$days · $start–$end';
   static const noHours = 'Your hospital has not set its working hours yet.';
   static const offDay = 'Today is not a working day here.';
-  static String onShift(String time) => 'You have a shift today at $time. Clock in to it on My visits or Shifts.';
+  static String onShift(String time) => 'You have a shift today at $time.';
   static String onLeave(String type) => 'You are on $type today.';
   static const clockIn = 'Clock in';
   static const clockOut = 'Clock out';

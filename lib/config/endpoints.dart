@@ -82,6 +82,8 @@ class Endpoints {
   static String attendanceToday(String hospitalId) => '/hospitals/$hospitalId/attendance/me/today';
   static String clockIn(String hospitalId) => '/hospitals/$hospitalId/attendance/me/clock-in';
   static String clockOut(String hospitalId) => '/hospitals/$hospitalId/attendance/me/clock-out';
+  static String shiftClockIn(String hospitalId, String shiftId) => '${shift(hospitalId, shiftId)}/clock-in';
+  static String shiftClockOut(String hospitalId, String shiftId) => '${shift(hospitalId, shiftId)}/clock-out';
   static String myAttendance(String hospitalId) => '/hospitals/$hospitalId/attendance/me';
   static String attendanceDay(String hospitalId) => '/hospitals/$hospitalId/attendance/day';
 

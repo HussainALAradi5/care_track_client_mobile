@@ -30,6 +30,16 @@ class AttendanceScreen extends ConsumerWidget {
     if (context.mounted) AppSnack.success(context, AttendanceTexts.clockedOut);
   }
 
+  Future<void> _clockInToShift(BuildContext context, AttendanceTodayController c, String shiftId) async {
+    await c.clockInToShift(shiftId);
+    if (context.mounted) AppSnack.success(context, AttendanceTexts.clockedIn);
+  }
+
+  Future<void> _clockOutOfShift(BuildContext context, AttendanceTodayController c, String shiftId, int version) async {
+    await c.clockOutOfShift(shiftId, version);
+    if (context.mounted) AppSnack.success(context, AttendanceTexts.clockedOut);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final today = ref.watch(attendanceTodayProvider);
@@ -53,6 +63,8 @@ class AttendanceScreen extends ConsumerWidget {
                         day: day,
                         onClockIn: () => _clockIn(context, controller),
                         onClockOut: (version) => _clockOut(context, controller, version),
+                        onClockInToShift: (shiftId) => _clockInToShift(context, controller, shiftId),
+                        onClockOutOfShift: (shiftId, version) => _clockOutOfShift(context, controller, shiftId, version),
                       ),
               ),
               if (teamRows.isNotEmpty) ...[
