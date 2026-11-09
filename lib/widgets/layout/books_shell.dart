@@ -21,7 +21,7 @@ class BooksShell extends ConsumerWidget {
     final organization = context_?.organization;
     final items = [
       for (final item in BooksNav.items)
-        if (organization?.can(item.permission) ?? false) item,
+        if (organization != null && (item.permission == null || organization.can(item.permission!))) item,
     ];
     final selected = items.lastIndexWhere((item) => location.startsWith(item.path));
     return Scaffold(

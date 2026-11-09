@@ -14,6 +14,7 @@ import '../../screens/patient/documents_screen.dart';
 import '../../screens/patient/bookings_screen.dart';
 import '../../screens/patient/home_screen.dart';
 import '../../screens/staff/desk_screen.dart';
+import '../../screens/staff/my_requests_screen.dart';
 import '../../screens/staff/queue_screen.dart';
 import '../../screens/staff/shifts_screen.dart';
 import '../../screens/staff/staff_overview_screen.dart';
@@ -79,6 +80,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(path: RoutePaths.staffDesk, builder: (_, _) => const DeskScreen()),
           GoRoute(path: RoutePaths.staffShifts, builder: (_, _) => const ShiftsScreen()),
           GoRoute(path: RoutePaths.staffVisits, builder: (_, _) => const VisitsScreen()),
+          GoRoute(path: RoutePaths.staffRequests, builder: (_, _) => const MyRequestsScreen()),
         ],
       ),
       ShellRoute(

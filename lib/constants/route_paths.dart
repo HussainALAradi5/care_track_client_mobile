@@ -14,6 +14,7 @@ class RoutePaths {
   static const staffDesk = '/staff/desk';
   static const staffShifts = '/staff/shifts';
   static const staffVisits = '/staff/visits';
+  static const staffRequests = '/staff/requests';
 
   static const books = '/books';
   static const booksJournal = '/books/journal';

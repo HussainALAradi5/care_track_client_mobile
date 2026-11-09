@@ -16,6 +16,7 @@ import '../../services/documents/written_document_service.dart';
 import '../../services/identity/staff_hospital_service.dart';
 import '../../services/identity/staff_organization_service.dart';
 import '../../services/workforce/shift_service.dart';
+import '../../services/workforce/staff_request_service.dart';
 
 /// Loaded in main() before the app starts, then overridden in the ProviderScope.
 final sharedPreferencesProvider = Provider<SharedPreferences>(
@@ -35,6 +36,7 @@ final bookingServiceProvider = Provider((ref) => BookingService(ref.watch(apiCli
 final appointmentServiceProvider = Provider((ref) => AppointmentService(ref.watch(apiClientProvider)));
 final staffHospitalServiceProvider = Provider((ref) => StaffHospitalService(ref.watch(apiClientProvider)));
 final shiftServiceProvider = Provider((ref) => ShiftService(ref.watch(apiClientProvider)));
+final staffRequestServiceProvider = Provider((ref) => StaffRequestService(ref.watch(apiClientProvider)));
 final staffOrganizationServiceProvider = Provider((ref) => StaffOrganizationService(ref.watch(apiClientProvider)));
 final accountingServiceProvider = Provider((ref) => AccountingService(ref.watch(apiClientProvider)));
 final writtenDocumentServiceProvider = Provider((ref) => WrittenDocumentService(ref.watch(apiClientProvider)));

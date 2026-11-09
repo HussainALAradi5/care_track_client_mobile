@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../enums/care/appointment_status.dart';
 import '../enums/care/booking_status.dart';
 import '../enums/ui/status_tone.dart';
+import '../enums/workforce/staff_request_status.dart';
 import '../models/ui/status_style.dart';
 
 class StatusStyles {
@@ -14,6 +15,13 @@ class StatusStyles {
     BookingStatus.cancelled: StatusStyle(label: 'Withdrawn', tone: StatusTone.neutral, icon: Icons.undo_rounded),
     BookingStatus.rejected: StatusStyle(label: 'Declined', tone: StatusTone.danger, icon: Icons.block_rounded),
     BookingStatus.expired: StatusStyle(label: 'Expired', tone: StatusTone.warning, icon: Icons.timer_off_rounded),
+  };
+
+  static const staffRequest = <StaffRequestStatus, StatusStyle>{
+    StaffRequestStatus.requested: StatusStyle(label: 'Waiting', tone: StatusTone.info, icon: Icons.hourglass_top_rounded),
+    StaffRequestStatus.approved: StatusStyle(label: 'Approved', tone: StatusTone.success, icon: Icons.check_circle_rounded),
+    StaffRequestStatus.rejected: StatusStyle(label: 'Rejected', tone: StatusTone.danger, icon: Icons.cancel_rounded),
+    StaffRequestStatus.cancelled: StatusStyle(label: 'Cancelled', tone: StatusTone.neutral, icon: Icons.block_rounded),
   };
 
   static const appointment = <AppointmentStatus, StatusStyle>{

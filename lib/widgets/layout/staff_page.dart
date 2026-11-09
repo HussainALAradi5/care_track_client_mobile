@@ -13,15 +13,17 @@ class StaffPage extends ConsumerWidget {
   const StaffPage({
     super.key,
     required this.title,
-    required this.permission,
     required this.onRefresh,
     required this.children,
+    this.permission,
     this.subtitle,
   });
 
   final String title;
   final String? subtitle;
-  final String permission;
+
+  /// Null: open to every staff member.
+  final String? permission;
   final Future<void> Function() onRefresh;
   final List<Widget> children;
 
@@ -49,7 +51,7 @@ class StaffPage extends ConsumerWidget {
                   hint: StaffTexts.noStaffHospitalHint,
                 );
               }
-              if (!value.can(permission)) {
+              if (permission != null && !value.can(permission!)) {
                 return const EmptyState(
                   icon: Icons.lock_rounded,
                   title: StaffTexts.lockedTitle,

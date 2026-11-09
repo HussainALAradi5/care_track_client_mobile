@@ -20,7 +20,7 @@ class StaffShell extends ConsumerWidget {
     final hospital = ref.watch(selectedStaffHospitalProvider);
     final items = [
       for (final item in StaffNav.items)
-        if (hospital?.can(item.permission) ?? false) item,
+        if (item.isOpenAt(hospital)) item,
     ];
     final selected = items.indexWhere((item) => location.startsWith(item.path));
     return Scaffold(
