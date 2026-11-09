@@ -35,6 +35,28 @@ class AttendanceTodayController extends AsyncNotifier<MyAttendanceToday?> {
     }
   }
 
+  Future<void> clockInToShift(String shiftId) =>
+      _clockShift((hospitalId) => ref.read(attendanceServiceProvider).clockInToShift(hospitalId, shiftId));
+
+  Future<void> clockOutOfShift(String shiftId, int expectedVersion) => _clockShift(
+    (hospitalId) => ref.read(attendanceServiceProvider).clockOutOfShift(hospitalId, shiftId, expectedVersion),
+  );
+
+  /// A shift answers with its own record only, so the day is read again. The caller's button stays locked until that
+  /// read ends; if only the read fails the clocking still stands and the screen offers a retry.
+  Future<void> _clockShift(Future<void> Function(String hospitalId) call) async {
+    final hospitalId = ref.read(attendanceHospitalIdProvider);
+    if (hospitalId == null) return;
+    try {
+      await call(hospitalId);
+    } catch (_) {
+      ref.invalidateSelf();
+      rethrow;
+    }
+    ref.invalidateSelf();
+    await future.then<void>((_) {}, onError: (_) {});
+  }
+
   Future<void> refresh() async {
     ref.invalidateSelf();
     ref.invalidate(attendanceHistoryProvider);

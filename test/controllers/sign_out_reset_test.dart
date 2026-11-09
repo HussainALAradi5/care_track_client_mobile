@@ -48,7 +48,24 @@ Object? server(RequestOptions r) {
       },
     ]),
     '/organizations/o1/leave/mine' => myLeave,
-    '/hospitals/h1/attendance/me/today' => {'workingDay': true, 'canClockIn': true, 'canClockOut': false},
+    '/hospitals/h1/attendance/me/today' => {
+      'workingDay': true,
+      'canClockIn': false,
+      'canClockOut': false,
+      'shiftId': 's1',
+      'shiftAttendance': {
+        'id': 'sa1',
+        'code': 'SA-1',
+        'shiftId': 's1',
+        'hospitalId': 'h1',
+        'clinicianId': 'u1',
+        'status': 'CHECKED_IN',
+        'isAbsent': false,
+        'clockInAt': '2026-11-09T05:02:00Z',
+        'clockOutAt': null,
+        'version': 0,
+      },
+    },
     '/hospitals/h1/attendance/me' => const [],
     '/hospitals/h1/attendance/day' => {'rows': const []},
     '/auth/me/team' => const [],
@@ -93,7 +110,7 @@ void main() {
     await c.read(authControllerProvider.future);
     await Future<void>.delayed(const Duration(milliseconds: 100));
     expect(c.read(myLeaveProvider).value, isNotNull);
-    expect(c.read(attendanceTodayProvider).value, isNotNull);
+    expect(c.read(attendanceTodayProvider).value?.shiftAttendance, isNotNull);
     expect(c.read(notificationPreferencesProvider).value, isNotNull);
     c.read(appToastProvider.notifier).show(const AppToast(message: 'x'));
     await c.read(careModeProvider.notifier).set(true);
